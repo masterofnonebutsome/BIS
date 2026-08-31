@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Generator V3.2</title>
-  <link rel="stylesheet" href="styles.css?v=3.4" />
+  <title>Workout Generator V4.0</title>
+  <link rel="stylesheet" href="styles.css?v=4.0" />
 </head>
 <body>
   <main class="app">
     <header class="hero">
       <div>
-        <p class="eyebrow">PERSONAL TRAINING TOOL • V3.2</p>
+        <p class="eyebrow">PERSONAL TRAINING TOOL • V4.0</p>
         <h1>Workout Generator</h1>
         <p class="sub">Independent cardio and core. Smart workout rules for Chest, Arms, Legs, and Back.</p>
       </div>
@@ -22,6 +22,10 @@
       <button id="cardioBtn" class="secondary" disabled>Pick Cardio</button>
       <div id="coreCard" class="result-card muted" style="margin-top:12px">Tap “Pick Core” for an optional core movement.</div>
       <button id="coreBtn" class="secondary" disabled>Pick Core</button>
+    </section>
+
+    <section class="panel motivation-panel">
+      <button id="motivationBtn" class="motivation-btn" type="button" disabled>Press for Motivation</button>
     </section>
 
     <section class="panel">
@@ -55,6 +59,17 @@
       <div id="historyDetail" class="history-detail muted">Click a completed day to view the workout.</div>
     </section>
   </main>
-  <script src="app.js?v=3.3"></script>
+
+  <div id="motivationModal" class="motivation-modal" aria-hidden="true">
+    <div class="motivation-modal-card" role="dialog" aria-modal="true" aria-label="Motivation video">
+      <button id="closeMotivation" class="motivation-close" type="button" aria-label="Close motivation video">×</button>
+      <div class="motivation-video-wrap">
+        <iframe id="motivationFrame" title="Motivation video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <a id="motivationFallback" class="motivation-fallback" href="#" target="_blank" rel="noopener noreferrer">Open on YouTube</a>
+    </div>
+  </div>
+
+  <script src="app.js?v=4.0"></script>
 </body>
 </html>

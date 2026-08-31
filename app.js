@@ -4,6 +4,7 @@ let selectedCardio = null;
 let selectedCore = null;
 let currentWorkout = null;
 let calendarDate = new Date();
+let motivationVideos = [];
 
 const cardioCard = document.getElementById("cardioCard");
 const coreCard = document.getElementById("coreCard");
@@ -16,10 +17,15 @@ const calendarTitle = document.getElementById("calendarTitle");
 const calendarGrid = document.getElementById("calendarGrid");
 const historyDetail = document.getElementById("historyDetail");
 const typeButtons = document.querySelectorAll(".type-btn");
+const motivationBtn = document.getElementById("motivationBtn");
+const motivationModal = document.getElementById("motivationModal");
+const motivationFrame = document.getElementById("motivationFrame");
+const motivationFallback = document.getElementById("motivationFallback");
+const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=3.3", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.0", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -33,6 +39,55 @@ async function loadWorkoutData() {
     console.error(error);
     cardioCard.innerHTML = `<strong>Workout data could not be loaded.</strong><br><span class="muted">Make sure workouts.json is in the same folder as index.html and app.js.</span>`;
   }
+}
+
+async function loadMotivationVideos() {
+  try {
+    const response = await fetch("./motivation.json?v=4.0", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
+    const data = await response.json();
+    motivationVideos = Array.isArray(data) ? data : (data.videos || []);
+    motivationVideos = motivationVideos.map(extractYouTubeId).filter(Boolean);
+    motivationBtn.disabled = motivationVideos.length === 0;
+  } catch (error) {
+    console.error(error);
+    motivationBtn.disabled = true;
+  }
+}
+
+function extractYouTubeId(value) {
+  if (typeof value !== "string") return null;
+  const text = value.trim();
+  if (/^[A-Za-z0-9_-]{11}$/.test(text)) return text;
+  try {
+    const url = new URL(text);
+    if (url.hostname.includes("youtu.be")) return url.pathname.split("/").filter(Boolean)[0] || null;
+    if (url.hostname.includes("youtube.com") || url.hostname.includes("youtube-nocookie.com")) {
+      if (url.searchParams.get("v")) return url.searchParams.get("v");
+      const parts = url.pathname.split("/").filter(Boolean);
+      const marker = parts.findIndex(part => ["embed", "shorts", "live"].includes(part));
+      if (marker >= 0 && parts[marker + 1]) return parts[marker + 1];
+    }
+  } catch (_) {}
+  return null;
+}
+
+function openMotivation() {
+  if (!motivationVideos.length) return;
+  const previous = localStorage.getItem("lastMotivationVideo");
+  const choices = motivationVideos.length > 1 ? motivationVideos.filter(id => id !== previous) : motivationVideos;
+  const id = randomItem(choices.length ? choices : motivationVideos);
+  localStorage.setItem("lastMotivationVideo", id);
+  motivationFrame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+  motivationFallback.href = `https://www.youtube.com/watch?v=${id}`;
+  motivationModal.classList.add("open");
+  motivationModal.setAttribute("aria-hidden", "false");
+}
+
+function closeMotivationVideo() {
+  motivationModal.classList.remove("open");
+  motivationModal.setAttribute("aria-hidden", "true");
+  motivationFrame.src = "";
 }
 
 const randomItem = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -395,6 +450,10 @@ function showHistoryForDate(key) {
   });
 }
 
+motivationBtn.addEventListener("click", openMotivation);
+closeMotivation.addEventListener("click", closeMotivationVideo);
+motivationModal.addEventListener("click", event => { if (event.target === motivationModal) closeMotivationVideo(); });
+document.addEventListener("keydown", event => { if (event.key === "Escape") closeMotivationVideo(); });
 cardioBtn.addEventListener("click", pickCardio);
 coreBtn.addEventListener("click", pickCore);
 typeButtons.forEach(btn => btn.addEventListener("click", () => generateWorkout(btn.dataset.type)));
@@ -416,3 +475,4 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 
 renderCalendar();
 loadWorkoutData();
+loadMotivationVideos();

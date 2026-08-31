@@ -1,76 +1,315 @@
 {
+  "version": "4.0",
   "compoundSchemes": [
-    {"sets": 9, "reps": "3", "rest": "1:00"},
-    {"sets": 5, "reps": "5", "rest": "2:00"},
-    {"sets": 4, "reps": "10", "rest": "1:30"}
+    {
+      "sets": 9,
+      "reps": "3",
+      "rest": "1:00"
+    },
+    {
+      "sets": 5,
+      "reps": "5",
+      "rest": "2:00"
+    },
+    {
+      "sets": 4,
+      "reps": "10",
+      "rest": "1:30"
+    }
   ],
-  "accessoryScheme": {"sets": 4, "reps": "10–15", "rest": "1:30"},
+  "accessoryScheme": {
+    "sets": 4,
+    "reps": "10–15",
+    "rest": "1:30"
+  },
   "cardio": [
-    {"name": "Run", "detail": "4 × 400m • max pace • 3:00 rest between intervals"},
-    {"name": "Run", "detail": "2 miles • moderate pace"},
-    {"name": "Run", "detail": "1 mile • quick pace"},
-    {"name": "StairMaster", "detail": "20 min • manageable speed/intensity"},
-    {"name": "Bike", "detail": "15 min"},
-    {"name": "Incline Walk", "detail": "Flat/low incline • fast pace • settings TBD"},
-    {"name": "Incline Walk", "detail": "High incline • slower pace • settings TBD"}
+    {
+      "name": "Run",
+      "detail": "4 × 400m • max pace • 3:00 rest between intervals"
+    },
+    {
+      "name": "Run",
+      "detail": "2 miles • moderate pace"
+    },
+    {
+      "name": "Run",
+      "detail": "1 mile • quick pace"
+    },
+    {
+      "name": "StairMaster",
+      "detail": "20 min • manageable speed/intensity"
+    },
+    {
+      "name": "Bike",
+      "detail": "15 min"
+    },
+    {
+      "name": "Incline Walk",
+      "detail": "Flat/low incline • fast pace • settings TBD"
+    },
+    {
+      "name": "Incline Walk",
+      "detail": "High incline • slower pace • settings TBD"
+    }
   ],
   "core": [
-    {"name": "Hanging Leg Raises", "scheme": {"sets": 4, "reps": "10", "rest": "—"}},
-    {"name": "Cable Crunches", "scheme": {"sets": 4, "reps": "10", "rest": "—"}},
-    {"name": "Decline Sit-Ups", "scheme": {"sets": 4, "reps": "20", "rest": "—"}},
-    {"name": "Weighted Planks", "scheme": {"sets": 3, "reps": "60 sec", "rest": "—"}}
+    {
+      "name": "Hanging Leg Raises",
+      "scheme": {
+        "sets": 4,
+        "reps": "10",
+        "rest": "—"
+      }
+    },
+    {
+      "name": "Cable Crunches",
+      "scheme": {
+        "sets": 4,
+        "reps": "10",
+        "rest": "—"
+      }
+    },
+    {
+      "name": "Decline Sit-Ups",
+      "scheme": {
+        "sets": 4,
+        "reps": "20",
+        "rest": "—"
+      }
+    },
+    {
+      "name": "Weighted Planks",
+      "scheme": {
+        "sets": 3,
+        "reps": "60 sec",
+        "rest": "—"
+      }
+    }
   ],
   "CHEST": {
     "compounds": [
-      {"name": "Flat Barbell Bench Press", "kind": "chest", "complementary": ["Smith Machine Incline Press"]},
-      {"name": "Incline Barbell Bench Press", "kind": "chest", "complementary": ["Flat Dumbbell Bench Press"]},
-      {"name": "Barbell Overhead Press", "kind": "shoulder", "complementary": ["Flat Barbell Bench Press", "Incline Barbell Bench Press", "Flat Dumbbell Bench Press", "Incline Dumbbell Bench Press", "Smith Machine Incline Press"]},
-      {"name": "Flat Dumbbell Bench Press", "kind": "chest", "complementary": ["Smith Machine Incline Press"]},
-      {"name": "Incline Dumbbell Bench Press", "kind": "chest", "complementary": ["Flat Barbell Bench Press"]},
-      {"name": "Dumbbell Overhead Press", "kind": "shoulder", "complementary": ["Flat Barbell Bench Press", "Incline Barbell Bench Press", "Flat Dumbbell Bench Press", "Incline Dumbbell Bench Press", "Smith Machine Incline Press"]}
+      {
+        "name": "Flat Barbell Bench Press",
+        "kind": "chest",
+        "complementary": [
+          "Smith Machine Incline Press"
+        ]
+      },
+      {
+        "name": "Incline Barbell Bench Press",
+        "kind": "chest",
+        "complementary": [
+          "Flat Dumbbell Bench Press"
+        ]
+      },
+      {
+        "name": "Barbell Overhead Press",
+        "kind": "shoulder",
+        "complementary": [
+          "Flat Barbell Bench Press",
+          "Incline Barbell Bench Press",
+          "Flat Dumbbell Bench Press",
+          "Incline Dumbbell Bench Press",
+          "Smith Machine Incline Press"
+        ]
+      },
+      {
+        "name": "Flat Dumbbell Bench Press",
+        "kind": "chest",
+        "complementary": [
+          "Smith Machine Incline Press"
+        ]
+      },
+      {
+        "name": "Incline Dumbbell Bench Press",
+        "kind": "chest",
+        "complementary": [
+          "Flat Barbell Bench Press"
+        ]
+      },
+      {
+        "name": "Dumbbell Overhead Press",
+        "kind": "shoulder",
+        "complementary": [
+          "Flat Barbell Bench Press",
+          "Incline Barbell Bench Press",
+          "Flat Dumbbell Bench Press",
+          "Incline Dumbbell Bench Press",
+          "Smith Machine Incline Press"
+        ]
+      }
     ],
-    "complementaryScheme": {"sets": 4, "reps": "10", "rest": "1:30"},
+    "complementaryScheme": {
+      "sets": 4,
+      "reps": "10",
+      "rest": "1:30"
+    },
     "shoulderFirst": "Lateral Raises",
-    "shoulderSecondChest": ["Upright Cable Row", "Rear Delt Fly", "Dumbbell Shoulder Press"],
-    "shoulderSecondShoulder": ["Upright Cable Row", "Rear Delt Fly"],
-    "triceps": ["Incline Skull Crushers", "Overhead Cable Extension", "Cable Rope Extension", "Overhead Dumbbell Extension", "Single-Arm Cable Extension"]
+    "shoulderSecondChest": [
+      "Upright Cable Row",
+      "Rear Delt Fly",
+      "Dumbbell Shoulder Press"
+    ],
+    "shoulderSecondShoulder": [
+      "Upright Cable Row",
+      "Rear Delt Fly"
+    ],
+    "triceps": [
+      "Incline Skull Crushers",
+      "Overhead Cable Extension",
+      "Cable Rope Extension",
+      "Overhead Dumbbell Extension",
+      "Single-Arm Cable Extension"
+    ]
   },
   "ARMS": {
     "compounds": [
-      {"name": "Barbell Curl", "kind": "biceps"},
-      {"name": "Dumbbell Overhead Press", "kind": "shoulder"},
-      {"name": "EZ-Bar Skull Crusher", "kind": "triceps"}
+      {
+        "name": "Barbell Curl",
+        "kind": "biceps"
+      },
+      {
+        "name": "Dumbbell Overhead Press",
+        "kind": "shoulder"
+      },
+      {
+        "name": "EZ-Bar Skull Crusher",
+        "kind": "triceps"
+      }
     ],
-    "biceps": ["Hammer Curls", "Dumbbell Curls", "Preacher Curls", "Spider Curls", "Cable Rope Curls"],
-    "triceps": ["Overhead Dumbbell Extension", "Cable Rope Extension", "V-Bar Extension", "Dips", "Single-Arm Cable Extension", "Incline Skull Crushers", "Cross-Body Cable Extension"],
+    "biceps": [
+      "Hammer Curls",
+      "Dumbbell Curls",
+      "Preacher Curls",
+      "Spider Curls",
+      "Cable Rope Curls"
+    ],
+    "triceps": [
+      "Overhead Dumbbell Extension",
+      "Cable Rope Extension",
+      "V-Bar Extension",
+      "Dips",
+      "Single-Arm Cable Extension",
+      "Incline Skull Crushers",
+      "Cross-Body Cable Extension"
+    ],
     "lateralRaise": "Lateral Raises",
     "forearms": [
-      {"name": "Wrist Curls", "scheme": {"sets": 4, "reps": "10–15", "rest": "1:30"}},
-      {"name": "Reverse Wrist Curls", "scheme": {"sets": 4, "reps": "10–15", "rest": "1:30"}},
-      {"name": "Reverse EZ-Bar Curls", "scheme": {"sets": 4, "reps": "10–15", "rest": "1:30"}},
-      {"name": "Farmer's Carries", "scheme": {"sets": 3, "reps": "30–45 sec", "rest": "1:30"}},
-      {"name": "Dead Hangs", "scheme": {"sets": 3, "reps": "30–45 sec", "rest": "1:30"}}
+      {
+        "name": "Wrist Curls",
+        "scheme": {
+          "sets": 4,
+          "reps": "10–15",
+          "rest": "1:30"
+        }
+      },
+      {
+        "name": "Reverse Wrist Curls",
+        "scheme": {
+          "sets": 4,
+          "reps": "10–15",
+          "rest": "1:30"
+        }
+      },
+      {
+        "name": "Reverse EZ-Bar Curls",
+        "scheme": {
+          "sets": 4,
+          "reps": "10–15",
+          "rest": "1:30"
+        }
+      },
+      {
+        "name": "Farmer's Carries",
+        "scheme": {
+          "sets": 3,
+          "reps": "30–45 sec",
+          "rest": "1:30"
+        }
+      },
+      {
+        "name": "Dead Hangs",
+        "scheme": {
+          "sets": 3,
+          "reps": "30–45 sec",
+          "rest": "1:30"
+        }
+      }
     ]
   },
   "LEGS": {
     "compounds": [
-      {"name": "Front Squat", "kind": "squat"},
-      {"name": "Back Squat", "kind": "squat"},
-      {"name": "Barbell RDL", "kind": "rdl"},
-      {"name": "Dumbbell RDL", "kind": "rdl"},
-      {"name": "Walking Lunges", "kind": "unilateral"},
-      {"name": "Rear-Foot-Elevated Split Squat", "kind": "unilateral"}
+      {
+        "name": "Front Squat",
+        "kind": "squat"
+      },
+      {
+        "name": "Back Squat",
+        "kind": "squat"
+      },
+      {
+        "name": "Barbell RDL",
+        "kind": "rdl"
+      },
+      {
+        "name": "Dumbbell RDL",
+        "kind": "rdl"
+      },
+      {
+        "name": "Walking Lunges",
+        "kind": "unilateral"
+      },
+      {
+        "name": "Rear-Foot-Elevated Split Squat",
+        "kind": "unilateral"
+      }
     ],
     "smithRDL": "Smith Machine RDL",
-    "squatPattern": ["Leg Press", "Hack Squat", "Smith Machine Squat"],
-    "rdlPattern": ["Smith Machine RDL", "Barbell RDL", "Dumbbell RDL"],
-    "hamstrings": ["Lying Hamstring Curl", "Seated Hamstring Curl", "Standing Hamstring Curl"],
-    "quads": ["Leg Extensions", "Leg Press", "Hack Squat", "Smith Machine Squat", "Heel-Elevated Goblet Squat"],
-    "calves": ["Seated Calf Raise", "Leg Press Calf Raise", "Single-Leg Calf Raise"]
+    "squatPattern": [
+      "Leg Press",
+      "Hack Squat",
+      "Smith Machine Squat"
+    ],
+    "rdlPattern": [
+      "Smith Machine RDL",
+      "Barbell RDL",
+      "Dumbbell RDL"
+    ],
+    "hamstrings": [
+      "Lying Hamstring Curl",
+      "Seated Hamstring Curl",
+      "Standing Hamstring Curl"
+    ],
+    "quads": [
+      "Leg Extensions",
+      "Leg Press",
+      "Hack Squat",
+      "Smith Machine Squat",
+      "Heel-Elevated Goblet Squat"
+    ],
+    "calves": [
+      "Seated Calf Raise",
+      "Leg Press Calf Raise",
+      "Single-Leg Calf Raise"
+    ]
   },
   "BACK": {
-    "compounds": ["Single-Arm Dumbbell Row", "Barbell Row", "Weighted Pull-Ups"],
-    "traps": ["Barbell Shrugs", "Dumbbell Shrugs", "Smith Machine Shrugs", "Cable Shrugs", "Chest-Supported Dumbbell Shrugs"],
-    "backAccessories": ["Chest-Supported Row Machine", "Pullovers", "Lat Pulldowns"]
+    "compounds": [
+      "Single-Arm Dumbbell Row",
+      "Barbell Row",
+      "Weighted Pull-Ups"
+    ],
+    "traps": [
+      "Barbell Shrugs",
+      "Dumbbell Shrugs",
+      "Smith Machine Shrugs",
+      "Cable Shrugs",
+      "Chest-Supported Dumbbell Shrugs"
+    ],
+    "backAccessories": [
+      "Chest-Supported Row Machine",
+      "Pullovers",
+      "Lat Pulldowns"
+    ]
   }
 }

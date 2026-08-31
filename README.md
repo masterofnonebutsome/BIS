@@ -1,42 +1,44 @@
-# Workout Generator V3.2
+# Workout Generator V4.0
 
 Personal static workout generator for GitHub Pages.
 
-## New in V3.2
+## New in V4.0
 
-- Main compound weight tracking.
-- Shows the last saved weight for each compound.
-- Saves today's compound weight when **Complete Workout** is pressed.
-- Completed-workout history also records the compound weight used.
-- Prevents the same main compound from appearing in two consecutive completed workouts of the same type.
-- Accessories favor exercises that were not used in the most recent completed workout of that type, while preserving all workout-structure rules and avoiding duplicates where required.
+- Added **Press for Motivation**.
+- Each press randomly chooses from the 54 supplied YouTube videos.
+- The same motivation video will not play twice in a row when alternatives are available.
+- Videos are stored separately in `motivation.json` so the list is easy to expand.
+- `motivation.json` accepts either full YouTube URLs or 11-character video IDs.
+- Corrected the overall displayed/cache version to **V4.0**.
 
 ## Existing features
 
-- Independent Cardio picker.
-- Independent Core picker.
+- Independent Cardio and Core pickers.
 - Smart Chest, Arms, Legs, and Back workout generation.
-- Sets, reps, and rest prescriptions.
-- Completed-workout calendar stored locally in the browser.
+- Main compound weight tracking and last-used weight.
+- Recent-repeat avoidance.
+- Completed-workout calendar stored in browser localStorage.
+- Delete individual completed workouts and automatically rebuild last compound weights.
 
-## Install / update on GitHub Pages
+## Update on GitHub Pages
 
-Upload these files to the root of the repository, replacing the old versions:
+Upload all six files to the root of the repository, replacing the existing files with the same names:
 
 - `index.html`
 - `styles.css`
 - `app.js`
 - `workouts.json`
+- `motivation.json`
+- `README.md`
 
-After committing the files, give GitHub Pages a moment to deploy, then refresh the site. A hard refresh may help if your browser cached an older version.
+Do not upload an extra file such as `styles(1).css`; the site uses `styles.css`.
+
+After committing, give GitHub Pages a moment to deploy and refresh the site. The V4.0 cache-busting values are already included.
+
+## Adding motivation videos later
+
+Open `motivation.json` and add another entry inside the `videos` list. You can paste a full YouTube URL or only its 11-character video ID. Keep a comma between entries.
 
 ## Storage note
 
-Workout history and compound weights are stored in that browser's localStorage. They do not sync across devices and are not shared with other people who open the same website.
-
-
-## V3.3
-- Added a **Delete Workout** button to each completed calendar entry.
-- Deleting requires confirmation.
-- If the deleted workout contained the latest saved compound weight, the app automatically restores the previous legitimate weight from history.
-- Calendar markers and recent-repeat logic update immediately after deletion.
+Workout history and compound weights keep using the same `workoutHistory` and `compoundWeights` localStorage keys, so this update does not intentionally reset existing browser history.
