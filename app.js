@@ -19,7 +19,7 @@ const typeButtons = document.querySelectorAll(".type-btn");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=3.1", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=3.2", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -43,6 +43,64 @@ function sample(arr, count) {
 }
 function exercise(name, label, scheme) { return { name, label, scheme }; }
 function accessory(name, label = "ACCESSORY") { return exercise(name, label, workoutData.accessoryScheme); }
+
+function dateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem("workoutHistory") || "{}"); }
+  catch { return {}; }
+}
+function saveHistory(h) { localStorage.setItem("workoutHistory", JSON.stringify(h)); }
+function getCompoundWeights() {
+  try { return JSON.parse(localStorage.getItem("compoundWeights") || "{}"); }
+  catch { return {}; }
+}
+function saveCompoundWeights(weights) { localStorage.setItem("compoundWeights", JSON.stringify(weights)); }
+
+function getMostRecentWorkout(type) {
+  const history = getHistory();
+  const entries = Object.values(history).flat().filter(entry => entry && entry.type === type);
+  if (!entries.length) return null;
+  return entries.sort((a, b) => {
+    const aTime = new Date(a.completedAt || a.date || 0).getTime();
+    const bTime = new Date(b.completedAt || b.date || 0).getTime();
+    return bTime - aTime;
+  })[0] || null;
+}
+
+function previousExerciseNames(type) {
+  const previous = getMostRecentWorkout(type);
+  return new Set((previous?.exercises || []).map(e => e.name));
+}
+
+function pickAvoidingRecent(items, recentNames, getName = item => item) {
+  if (!Array.isArray(items) || !items.length) return null;
+  const fresh = items.filter(item => !recentNames.has(getName(item)));
+  return randomItem(fresh.length ? fresh : items);
+}
+
+function sampleAvoidingRecent(items, count, recentNames, getName = item => item) {
+  const fresh = items.filter(item => !recentNames.has(getName(item)));
+  const repeated = items.filter(item => recentNames.has(getName(item)));
+  const result = sample(fresh, Math.min(count, fresh.length));
+  if (result.length < count) {
+    const chosenNames = new Set(result.map(getName));
+    const leftovers = repeated.filter(item => !chosenNames.has(getName(item)));
+    result.push(...sample(leftovers, count - result.length));
+  }
+  return result;
+}
+
+function pickCompound(type, compounds) {
+  const previous = getMostRecentWorkout(type);
+  const previousCompound = previous?.exercises?.[0]?.name;
+  const choices = compounds.filter(item => {
+    const name = typeof item === "string" ? item : item.name;
+    return name !== previousCompound;
+  });
+  return randomItem(choices.length ? choices : compounds);
+}
 
 function pickCardio() {
   selectedCardio = randomItem(workoutData.cardio);
@@ -72,12 +130,15 @@ function syncIndependentSelections() {
 
 function generateChest() {
   const d = workoutData.CHEST;
-  const compound = randomItem(d.compounds);
-  const triceps = sample(d.triceps, 2);
-  const secondShoulder = randomItem(compound.kind === "shoulder" ? d.shoulderSecondShoulder : d.shoulderSecondChest);
+  const recent = previousExerciseNames("CHEST");
+  const compound = pickCompound("CHEST", d.compounds);
+  const triceps = sampleAvoidingRecent(d.triceps, 2, recent);
+  const shoulderPool = compound.kind === "shoulder" ? d.shoulderSecondShoulder : d.shoulderSecondChest;
+  const secondShoulder = pickAvoidingRecent(shoulderPool, recent);
+  const complementary = pickAvoidingRecent(compound.complementary, recent);
   return [
     exercise(compound.name, "COMPOUND", randomItem(workoutData.compoundSchemes)),
-    exercise(randomItem(compound.complementary), "COMPLEMENTARY PRESS", d.complementaryScheme),
+    exercise(complementary, "COMPLEMENTARY PRESS", d.complementaryScheme),
     accessory(d.shoulderFirst, "SHOULDER"),
     accessory(triceps[0], "TRICEPS"),
     accessory(secondShoulder, "SHOULDER"),
@@ -87,7 +148,8 @@ function generateChest() {
 
 function generateArms() {
   const d = workoutData.ARMS;
-  const compound = randomItem(d.compounds);
+  const recent = previousExerciseNames("ARMS");
+  const compound = pickCompound("ARMS", d.compounds);
   let categories;
   if (compound.kind === "biceps") categories = ["triceps", "biceps", "triceps", "biceps", "triceps"];
   else if (compound.kind === "triceps") categories = ["biceps", "triceps", "biceps", "triceps", "biceps"];
@@ -98,10 +160,11 @@ function generateArms() {
   }
   const neededB = categories.filter(x => x === "biceps").length;
   const neededT = categories.filter(x => x === "triceps").length;
-  const biceps = sample(d.biceps, neededB), triceps = sample(d.triceps, neededT);
+  const biceps = sampleAvoidingRecent(d.biceps, neededB, recent);
+  const triceps = sampleAvoidingRecent(d.triceps, neededT, recent);
   let bi = 0, ti = 0;
   const middle = categories.map(cat => accessory(cat === "biceps" ? biceps[bi++] : triceps[ti++], cat.toUpperCase()));
-  const forearm = randomItem(d.forearms);
+  const forearm = pickAvoidingRecent(d.forearms, recent, item => item.name);
   return [
     exercise(compound.name, "COMPOUND", randomItem(workoutData.compoundSchemes)),
     ...middle,
@@ -112,33 +175,55 @@ function generateArms() {
 
 function generateLegs() {
   const d = workoutData.LEGS;
-  const compound = randomItem(d.compounds);
+  const recent = previousExerciseNames("LEGS");
+  const compound = pickCompound("LEGS", d.compounds);
   const scheme = randomItem(workoutData.compoundSchemes);
-  let ex = [exercise(compound.name, "COMPOUND", scheme)];
+  const ex = [exercise(compound.name, "COMPOUND", scheme)];
+
   if (compound.kind === "squat") {
-    const h = randomItem(d.hamstrings), q = sample(d.quads, 2), c = randomItem(d.calves);
-    ex.push(accessory(d.smithRDL, "HAMSTRING / RDL"), accessory(q[0], "QUAD"), accessory(c, "CALF"), accessory(h, "HAMSTRING"), accessory(q[1], "QUAD"));
+    const h = pickAvoidingRecent(d.hamstrings, recent);
+    const q = sampleAvoidingRecent(d.quads, 2, recent);
+    const c = pickAvoidingRecent(d.calves, recent);
+    ex.push(
+      accessory(d.smithRDL, "HAMSTRING / RDL"),
+      accessory(q[0], "QUAD"),
+      accessory(c, "CALF"),
+      accessory(h, "HAMSTRING"),
+      accessory(q[1], "QUAD")
+    );
   } else if (compound.kind === "rdl") {
-    const q2 = randomItem(d.squatPattern);
+    const q2 = pickAvoidingRecent(d.squatPattern, recent);
     const remainingQuads = d.quads.filter(x => x !== q2);
-    ex.push(accessory(q2, "QUAD / SQUAT PATTERN"), accessory(randomItem(d.calves), "CALF"), accessory(randomItem(d.hamstrings), "HAMSTRING"), accessory(randomItem(remainingQuads), "QUAD"), accessory(randomItem(d.calves.filter(x => x !== ex[1]?.name)), "CALF"));
-    // Ensure the two calf slots differ.
-    if (ex[2].name === ex[5].name) ex[5] = accessory(randomItem(d.calves.filter(x => x !== ex[2].name)), "CALF");
+    const calves = sampleAvoidingRecent(d.calves, 2, recent);
+    ex.push(
+      accessory(q2, "QUAD / SQUAT PATTERN"),
+      accessory(calves[0], "CALF"),
+      accessory(pickAvoidingRecent(d.hamstrings, recent), "HAMSTRING"),
+      accessory(pickAvoidingRecent(remainingQuads, recent), "QUAD"),
+      accessory(calves[1], "CALF")
+    );
   } else {
     const rdlChoices = d.rdlPattern.filter(x => x !== compound.name);
-    const q = sample(d.quads, 2);
-    ex.push(accessory(randomItem(rdlChoices), "HAMSTRING / RDL"), accessory(q[0], "QUAD"), accessory(randomItem(d.calves), "CALF"), accessory(randomItem(d.hamstrings), "HAMSTRING"), accessory(q[1], "QUAD"));
+    const q = sampleAvoidingRecent(d.quads, 2, recent);
+    ex.push(
+      accessory(pickAvoidingRecent(rdlChoices, recent), "HAMSTRING / RDL"),
+      accessory(q[0], "QUAD"),
+      accessory(pickAvoidingRecent(d.calves, recent), "CALF"),
+      accessory(pickAvoidingRecent(d.hamstrings, recent), "HAMSTRING"),
+      accessory(q[1], "QUAD")
+    );
   }
   return ex;
 }
 
 function generateBack() {
   const d = workoutData.BACK;
-  const biceps = sample(workoutData.ARMS.biceps, 2);
-  const backs = sample(d.backAccessories, 2);
+  const recent = previousExerciseNames("BACK");
+  const biceps = sampleAvoidingRecent(workoutData.ARMS.biceps, 2, recent);
+  const backs = sampleAvoidingRecent(d.backAccessories, 2, recent);
   return [
-    exercise(randomItem(d.compounds), "COMPOUND", randomItem(workoutData.compoundSchemes)),
-    accessory(randomItem(d.traps), "TRAPS"),
+    exercise(pickCompound("BACK", d.compounds), "COMPOUND", randomItem(workoutData.compoundSchemes)),
+    accessory(pickAvoidingRecent(d.traps, recent), "TRAPS"),
     accessory(backs[0], "BACK"),
     accessory(biceps[0], "BICEPS"),
     accessory(backs[1], "BACK"),
@@ -152,7 +237,13 @@ function generateWorkout(type) {
   typeButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.type === type));
   if (!selectedCardio) pickCardio();
   const generators = { CHEST: generateChest, ARMS: generateArms, LEGS: generateLegs, BACK: generateBack };
-  currentWorkout = { date: new Date().toISOString(), type, cardio: selectedCardio, core: selectedCore, exercises: generators[type]() };
+  currentWorkout = {
+    date: new Date().toISOString(),
+    type,
+    cardio: selectedCardio,
+    core: selectedCore,
+    exercises: generators[type]()
+  };
   renderWorkout();
   regenerateBtn.disabled = false;
   completeBtn.disabled = false;
@@ -163,23 +254,62 @@ function renderScheme(s) {
   return `<span class="pill">${s.sets} sets</span><span class="pill">${s.reps} reps</span>${rest}`;
 }
 
-function renderWorkout() {
-  if (!currentWorkout) return;
-  const cardio = currentWorkout.cardio ? `<div class="exercise-card"><div class="exercise-label">CARDIO</div><div class="exercise-name">${currentWorkout.cardio.name}</div><div class="exercise-meta"><span class="pill">${currentWorkout.cardio.detail}</span></div></div>` : "";
-  const core = currentWorkout.core ? `<div class="exercise-card"><div class="exercise-label">CORE • OPTIONAL</div><div class="exercise-name">${currentWorkout.core.name}</div><div class="exercise-meta">${renderScheme(currentWorkout.core.scheme)}</div></div>` : "";
-  workoutOutput.innerHTML = cardio + currentWorkout.exercises.map((e, i) => `<div class="exercise-card ${i === 0 ? "compound" : ""}"><div class="exercise-label">${currentWorkout.type} • ${i + 1} • ${e.label}</div><div class="exercise-name">${e.name}</div><div class="exercise-meta">${renderScheme(e.scheme)}</div></div>`).join("") + core;
+function renderCompoundWeight(exerciseItem) {
+  const weights = getCompoundWeights();
+  const saved = weights[exerciseItem.name];
+  const lastText = saved?.weight !== undefined && saved?.weight !== ""
+    ? `<div class="last-weight">Last weight: <strong>${saved.weight} lb</strong></div>`
+    : `<div class="last-weight muted">No previous weight saved.</div>`;
+  const value = exerciseItem.weightUsed ?? "";
+  return `
+    <div class="weight-box">
+      ${lastText}
+      <label class="weight-label" for="compoundWeightInput">Today's weight (lb)</label>
+      <div class="weight-input-row">
+        <input id="compoundWeightInput" class="weight-input" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Enter weight" value="${value}">
+        <span>lb</span>
+      </div>
+    </div>`;
 }
 
-function dateKey(date) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`; }
-function getHistory() { return JSON.parse(localStorage.getItem("workoutHistory") || "{}"); }
-function saveHistory(h) { localStorage.setItem("workoutHistory", JSON.stringify(h)); }
+function renderWorkout() {
+  if (!currentWorkout) return;
+  const cardio = currentWorkout.cardio
+    ? `<div class="exercise-card"><div class="exercise-label">CARDIO</div><div class="exercise-name">${currentWorkout.cardio.name}</div><div class="exercise-meta"><span class="pill">${currentWorkout.cardio.detail}</span></div></div>`
+    : "";
+  const core = currentWorkout.core
+    ? `<div class="exercise-card"><div class="exercise-label">CORE • OPTIONAL</div><div class="exercise-name">${currentWorkout.core.name}</div><div class="exercise-meta">${renderScheme(currentWorkout.core.scheme)}</div></div>`
+    : "";
+  const exerciseCards = currentWorkout.exercises.map((e, i) => `
+    <div class="exercise-card ${i === 0 ? "compound" : ""}">
+      <div class="exercise-label">${currentWorkout.type} • ${i + 1} • ${e.label}</div>
+      <div class="exercise-name">${e.name}</div>
+      <div class="exercise-meta">${renderScheme(e.scheme)}</div>
+      ${i === 0 ? renderCompoundWeight(e) : ""}
+    </div>`).join("");
+  workoutOutput.innerHTML = cardio + exerciseCards + core;
+}
 
 function completeWorkout() {
   if (!currentWorkout) return;
+  const compound = currentWorkout.exercises?.[0];
+  if (compound) {
+    const input = document.getElementById("compoundWeightInput");
+    const weight = (input?.value ?? compound.weightUsed ?? "").toString().trim();
+    if (weight !== "") {
+      compound.weightUsed = weight;
+      const weights = getCompoundWeights();
+      weights[compound.name] = { weight, completedAt: new Date().toISOString() };
+      saveCompoundWeights(weights);
+    }
+  }
+
   const now = new Date(), key = dateKey(now), history = getHistory();
   if (!history[key]) history[key] = [];
   history[key].push({ ...currentWorkout, cardio: selectedCardio, core: selectedCore, completedAt: now.toISOString() });
-  saveHistory(history); renderCalendar();
+  saveHistory(history);
+  renderCalendar();
+  renderWorkout();
   completeBtn.textContent = "Saved ✓";
   setTimeout(() => completeBtn.textContent = "Complete Workout", 1200);
 }
@@ -189,20 +319,38 @@ function renderCalendar() {
   calendarTitle.textContent = calendarDate.toLocaleDateString(undefined, { month: "long", year: "numeric" });
   calendarGrid.innerHTML = "";
   const firstDay = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate();
-  for (let i=0; i<firstDay; i++) { const empty=document.createElement("div"); empty.className="calendar-day empty"; calendarGrid.appendChild(empty); }
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement("div");
+    empty.className = "calendar-day empty";
+    calendarGrid.appendChild(empty);
+  }
   const todayKey = dateKey(new Date());
-  for (let day=1; day<=daysInMonth; day++) {
-    const key=dateKey(new Date(year,month,day)), btn=document.createElement("button"); btn.className="calendar-day"; btn.textContent=day;
-    if (history[key]?.length) btn.classList.add("completed"); if (key===todayKey) btn.classList.add("today");
-    btn.addEventListener("click",()=>showHistoryForDate(key)); calendarGrid.appendChild(btn);
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = dateKey(new Date(year, month, day)), btn = document.createElement("button");
+    btn.className = "calendar-day";
+    btn.textContent = day;
+    if (history[key]?.length) btn.classList.add("completed");
+    if (key === todayKey) btn.classList.add("today");
+    btn.addEventListener("click", () => showHistoryForDate(key));
+    calendarGrid.appendChild(btn);
   }
 }
 
 function showHistoryForDate(key) {
-  const entries=getHistory()[key] || [];
-  if (!entries.length) { historyDetail.className="history-detail muted"; historyDetail.textContent="No completed workout on this date."; return; }
-  historyDetail.className="history-detail";
-  historyDetail.innerHTML=entries.map((entry,idx)=>`<div><h4>${entry.type} Workout${entries.length>1?` #${idx+1}`:""}</h4>${entry.cardio?`<div><strong>Cardio:</strong> ${entry.cardio.name} — ${entry.cardio.detail}</div>`:""}${entry.core?`<div><strong>Core:</strong> ${entry.core.name} — ${entry.core.scheme.sets} × ${entry.core.scheme.reps}</div>`:""}<ol>${(entry.exercises||[]).map(e=>`<li><strong>${e.name}</strong> (${e.label}): ${e.scheme.sets} × ${e.scheme.reps}${e.scheme.rest&&e.scheme.rest!=="—"?`, rest ${e.scheme.rest}`:""}</li>`).join("")}</ol></div>`).join("<hr>");
+  const entries = getHistory()[key] || [];
+  if (!entries.length) {
+    historyDetail.className = "history-detail muted";
+    historyDetail.textContent = "No completed workout on this date.";
+    return;
+  }
+  historyDetail.className = "history-detail";
+  historyDetail.innerHTML = entries.map((entry, idx) => `
+    <div>
+      <h4>${entry.type} Workout${entries.length > 1 ? ` #${idx + 1}` : ""}</h4>
+      ${entry.cardio ? `<div><strong>Cardio:</strong> ${entry.cardio.name} — ${entry.cardio.detail}</div>` : ""}
+      ${entry.core ? `<div><strong>Core:</strong> ${entry.core.name} — ${entry.core.scheme.sets} × ${entry.core.scheme.reps}</div>` : ""}
+      <ol>${(entry.exercises || []).map((e, i) => `<li><strong>${e.name}</strong> (${e.label}): ${e.scheme.sets} × ${e.scheme.reps}${e.scheme.rest && e.scheme.rest !== "—" ? `, rest ${e.scheme.rest}` : ""}${i === 0 && e.weightUsed ? ` — <strong>${e.weightUsed} lb</strong>` : ""}</li>`).join("")}</ol>
+    </div>`).join("<hr>");
 }
 
 cardioBtn.addEventListener("click", pickCardio);
@@ -210,6 +358,19 @@ coreBtn.addEventListener("click", pickCore);
 typeButtons.forEach(btn => btn.addEventListener("click", () => generateWorkout(btn.dataset.type)));
 regenerateBtn.addEventListener("click", () => { if (selectedType) generateWorkout(selectedType); });
 completeBtn.addEventListener("click", completeWorkout);
-document.getElementById("prevMonth").addEventListener("click", () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth()-1, 1); renderCalendar(); });
-document.getElementById("nextMonth").addEventListener("click", () => { calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth()+1, 1); renderCalendar(); });
-renderCalendar(); loadWorkoutData();
+workoutOutput.addEventListener("input", event => {
+  if (event.target.id === "compoundWeightInput" && currentWorkout?.exercises?.[0]) {
+    currentWorkout.exercises[0].weightUsed = event.target.value;
+  }
+});
+document.getElementById("prevMonth").addEventListener("click", () => {
+  calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1);
+  renderCalendar();
+});
+document.getElementById("nextMonth").addEventListener("click", () => {
+  calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1);
+  renderCalendar();
+});
+
+renderCalendar();
+loadWorkoutData();

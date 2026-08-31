@@ -304,3 +304,41 @@ button:disabled {
     flex-direction: column;
   }
 }
+
+/* V3.2 compound weight tracking */
+.weight-box {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.last-weight {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+.weight-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.weight-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.weight-input {
+  width: 150px;
+  max-width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2, #111827);
+  color: inherit;
+  font: inherit;
+}
+.weight-input:focus {
+  outline: 2px solid var(--accent, #ffffff);
+  outline-offset: 2px;
+}
