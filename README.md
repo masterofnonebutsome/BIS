@@ -33,3 +33,10 @@ After committing the files, give GitHub Pages a moment to deploy, then refresh t
 ## Storage note
 
 Workout history and compound weights are stored in that browser's localStorage. They do not sync across devices and are not shared with other people who open the same website.
+
+
+## V3.3
+- Added a **Delete Workout** button to each completed calendar entry.
+- Deleting requires confirmation.
+- If the deleted workout contained the latest saved compound weight, the app automatically restores the previous legitimate weight from history.
+- Calendar markers and recent-repeat logic update immediately after deletion.

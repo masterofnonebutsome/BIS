@@ -19,7 +19,7 @@ const typeButtons = document.querySelectorAll(".type-btn");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=3.2", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=3.3", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -57,6 +57,44 @@ function getCompoundWeights() {
   catch { return {}; }
 }
 function saveCompoundWeights(weights) { localStorage.setItem("compoundWeights", JSON.stringify(weights)); }
+
+
+function rebuildCompoundWeightsFromHistory() {
+  const history = getHistory();
+  const latest = {};
+  Object.values(history).flat().forEach(entry => {
+    if (!entry || !Array.isArray(entry.exercises) || !entry.exercises.length) return;
+    const compound = entry.exercises[0];
+    if (!compound?.name || compound.weightUsed === undefined || compound.weightUsed === null || compound.weightUsed === "") return;
+    const completedAt = entry.completedAt || entry.date || "";
+    const existingTime = latest[compound.name]?.completedAt ? new Date(latest[compound.name].completedAt).getTime() : -Infinity;
+    const candidateTime = completedAt ? new Date(completedAt).getTime() : -Infinity;
+    if (!latest[compound.name] || candidateTime >= existingTime) {
+      latest[compound.name] = { weight: compound.weightUsed, completedAt };
+    }
+  });
+  saveCompoundWeights(latest);
+}
+
+function deleteWorkout(key, index) {
+  const history = getHistory();
+  const entries = history[key] || [];
+  const entry = entries[index];
+  if (!entry) return;
+
+  const label = `${entry.type || "Workout"} workout`;
+  if (!window.confirm(`Delete this ${label}? This cannot be undone.`)) return;
+
+  entries.splice(index, 1);
+  if (entries.length) history[key] = entries;
+  else delete history[key];
+
+  saveHistory(history);
+  rebuildCompoundWeightsFromHistory();
+  renderCalendar();
+  showHistoryForDate(key);
+  if (currentWorkout) renderWorkout();
+}
 
 function getMostRecentWorkout(type) {
   const history = getHistory();
@@ -350,7 +388,11 @@ function showHistoryForDate(key) {
       ${entry.cardio ? `<div><strong>Cardio:</strong> ${entry.cardio.name} — ${entry.cardio.detail}</div>` : ""}
       ${entry.core ? `<div><strong>Core:</strong> ${entry.core.name} — ${entry.core.scheme.sets} × ${entry.core.scheme.reps}</div>` : ""}
       <ol>${(entry.exercises || []).map((e, i) => `<li><strong>${e.name}</strong> (${e.label}): ${e.scheme.sets} × ${e.scheme.reps}${e.scheme.rest && e.scheme.rest !== "—" ? `, rest ${e.scheme.rest}` : ""}${i === 0 && e.weightUsed ? ` — <strong>${e.weightUsed} lb</strong>` : ""}</li>`).join("")}</ol>
+      <button class="delete-workout-btn" type="button" data-date="${key}" data-index="${idx}">Delete Workout</button>
     </div>`).join("<hr>");
+  historyDetail.querySelectorAll(".delete-workout-btn").forEach(btn => {
+    btn.addEventListener("click", () => deleteWorkout(btn.dataset.date, Number(btn.dataset.index)));
+  });
 }
 
 cardioBtn.addEventListener("click", pickCardio);

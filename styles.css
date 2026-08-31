@@ -3,7 +3,7 @@
 }
 
 :root {
-  --bg: ##94C93D;
+  --bg: #0f1115;
   --panel: #171a21;
   --panel-2: #20242d;
   --text: #f4f6f8;
@@ -341,4 +341,18 @@ button:disabled {
 .weight-input:focus {
   outline: 2px solid var(--accent, #ffffff);
   outline-offset: 2px;
+}
+
+
+/* V3.3 calendar delete controls */
+.delete-workout-btn {
+  margin-top: 10px;
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(255, 125, 125, .45);
+  font-weight: 800;
+}
+
+.delete-workout-btn:hover {
+  background: rgba(255, 125, 125, .08);
 }
