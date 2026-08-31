@@ -3,33 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Generator</title>
+  <title>Workout Generator V3</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="app">
     <header class="hero">
       <div>
-        <p class="eyebrow">PERSONAL TRAINING TOOL</p>
+        <p class="eyebrow">PERSONAL TRAINING TOOL • V3</p>
         <h1>Workout Generator</h1>
-        <p class="sub">Random cardio. Smart compound selection. Accessories that fit the main lift.</p>
+        <p class="sub">Independent cardio and core. Smart workout rules for Chest, Arms, Legs, and Back.</p>
       </div>
     </header>
 
     <section class="panel">
-      <div class="section-title">
-        <span>1</span>
-        <h2>Cardio</h2>
-      </div>
+      <div class="section-title"><span>1</span><h2>Cardio + Core</h2></div>
       <div id="cardioCard" class="result-card muted">Loading workout data…</div>
       <button id="cardioBtn" class="secondary" disabled>Pick Cardio</button>
+      <div id="coreCard" class="result-card muted" style="margin-top:12px">Tap “Pick Core” for an optional core movement.</div>
+      <button id="coreBtn" class="secondary" disabled>Pick Core</button>
     </section>
 
     <section class="panel">
-      <div class="section-title">
-        <span>2</span>
-        <h2>Workout Type</h2>
-      </div>
+      <div class="section-title"><span>2</span><h2>Workout Type</h2></div>
       <div class="type-grid">
         <button class="type-btn" data-type="CHEST" disabled>Chest</button>
         <button class="type-btn" data-type="ARMS" disabled>Arms</button>
@@ -39,37 +35,26 @@
     </section>
 
     <section class="panel">
-      <div class="section-title">
-        <span>3</span>
-        <h2>Generated Workout</h2>
-      </div>
-      <div id="workoutOutput" class="workout-output">
-        <div class="empty-state">Choose a workout type to generate your session.</div>
-      </div>
+      <div class="section-title"><span>3</span><h2>Generated Workout</h2></div>
+      <div id="workoutOutput" class="workout-output"><div class="empty-state">Choose a workout type to generate your session.</div></div>
       <div class="actions">
-        <button id="regenerateBtn" class="secondary" disabled>Regenerate</button>
+        <button id="regenerateBtn" class="secondary" disabled>Regenerate Workout</button>
         <button id="completeBtn" class="primary" disabled>Complete Workout</button>
       </div>
     </section>
 
     <section class="panel">
-      <div class="section-title">
-        <span>4</span>
-        <h2>Calendar</h2>
-      </div>
+      <div class="section-title"><span>4</span><h2>Calendar</h2></div>
       <div class="calendar-header">
         <button id="prevMonth" class="icon-btn" aria-label="Previous month">←</button>
         <h3 id="calendarTitle"></h3>
         <button id="nextMonth" class="icon-btn" aria-label="Next month">→</button>
       </div>
-      <div class="weekdays">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-      </div>
+      <div class="weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
       <div id="calendarGrid" class="calendar-grid"></div>
       <div id="historyDetail" class="history-detail muted">Click a completed day to view the workout.</div>
     </section>
   </main>
-
   <script src="app.js"></script>
 </body>
 </html>

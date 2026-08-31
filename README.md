@@ -1,59 +1,9 @@
-# Workout Generator V2
+# Workout Generator V3
 
-This version separates the workout database from the application logic.
+V3 implements the full smart workout rules for Cardio, Core, Chest, Arms, Legs, and Back.
 
-## Files
-
-- `index.html` — page structure
-- `styles.css` — appearance
-- `app.js` — generator and calendar logic
-- `workouts.json` — workout content you can edit yourself
-
-## Editing your workouts
-
-For routine workout changes, edit only `workouts.json`.
-
-Example cardio entry:
-
-```json
-{
-  "name": "Stair Climber",
-  "detail": "10 min • moderate intensity"
-}
-```
-
-Example compound:
-
-```json
-{
-  "name": "Barbell Bench Press",
-  "schemes": [
-    {
-      "sets": 5,
-      "reps": "5",
-      "rest": "3 min"
-    }
-  ],
-  "accessories": [
-    "Incline Dumbbell Press",
-    "Cable Fly",
-    "Triceps Pushdown"
-  ]
-}
-```
-
-## Important JSON rules
-
-1. Text must be inside double quotes.
-2. Separate items with commas.
-3. Do not place a comma after the final item in a list.
-4. Keep brackets and braces paired correctly.
-5. Keep workout type keys (`CHEST`, `ARMS`, `LEGS`, `BACK`) uppercase unless you also change the app logic.
-
-## GitHub Pages
-
-Upload all four web files to the root of your repository:
-
+## Upload to GitHub Pages
+Replace the files in the root of your BIS repository with these files:
 - `index.html`
 - `styles.css`
 - `app.js`
@@ -61,8 +11,18 @@ Upload all four web files to the root of your repository:
 
 Commit the changes. GitHub Pages will redeploy automatically.
 
-## Local testing
+## What is editable
+Most exercise names, pools, and schemes live in `workouts.json`. The sequencing/intelligent selection rules live in `app.js`.
 
-Because `app.js` loads `workouts.json` with `fetch()`, opening `index.html` directly as a `file://` page may be blocked by your browser.
+## V3 features
+- Independent Cardio generator
+- Independent Core generator
+- Chest complementary-press and shoulder/triceps rules
+- 8-movement Arms structure with alternating biceps/triceps
+- 6-movement Legs structure with compound-dependent complementary movement and hamstring/quad/calf rotation
+- 6-movement Back structure with mandatory trap movement and alternating back/biceps accessories
+- Duplicate prevention where specified
+- Rep-based and time-based exercise prescriptions
+- Calendar/history saved in the browser with `localStorage`
 
-The GitHub Pages version will work normally. For local development, use a simple local web server such as VS Code Live Server.
+Note: calendar history remains device/browser-specific until cloud sync is added later.
