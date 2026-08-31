@@ -1,10 +1,9 @@
 const workoutData = {
   cardio: [
-    { name: "Incline Treadmill Walk", detail: "10 min • moderate pace" },
-    { name: "Stationary Bike", detail: "10 min • moderate intensity" },
-    { name: "Row", detail: "1000 m • steady pace" },
+    { name: "Incline Treadmill Walk", detail: "20 min • moderate pace" },
+    { name: "Stationary Bike", detail: "15 min • moderate intensity" },
     { name: "Run", detail: "1 mile • comfortable pace" },
-    { name: "Stair Climber", detail: "8 min • moderate intensity" }
+    { name: "Stair Climber", detail: "15 min • moderate intensity" }
   ],
 
   CHEST: {
@@ -13,12 +12,13 @@ const workoutData = {
         name: "Barbell Bench Press",
         schemes: [
           { sets: 5, reps: "5", rest: "3 min" },
-          { sets: 4, reps: "6–8", rest: "2–3 min" },
-          { sets: 4, reps: "8", rest: "2 min" }
+          { sets: 4, reps: "10", rest: "2 min" },
+          { sets: 9, reps: "3", rest: "1 min" }
         ],
         accessories: [
           "Incline Dumbbell Press",
           "Cable Fly",
+          "Skull Crushers",
           "Pec Deck",
           "Lateral Raise",
           "Triceps Pushdown",
@@ -28,9 +28,9 @@ const workoutData = {
       {
         name: "Incline Barbell Bench Press",
         schemes: [
-          { sets: 4, reps: "6", rest: "2–3 min" },
-          { sets: 4, reps: "8", rest: "2 min" },
-          { sets: 3, reps: "8–10", rest: "90 sec" }
+          { sets: 5, reps: "5", rest: "3 min" },
+          { sets: 4, reps: "10", rest: "2 min" },
+          { sets: 9, reps: "3", rest: "1 min" }
         ],
         accessories: [
           "Flat Dumbbell Press",
@@ -52,6 +52,7 @@ const workoutData = {
           "Cable Fly",
           "Lateral Raise",
           "Overhead Triceps Extension",
+          "Skull Crushers",
           "Triceps Pushdown"
         ]
       }
@@ -63,8 +64,8 @@ const workoutData = {
       {
         name: "Close-Grip Bench Press",
         schemes: [
-          { sets: 4, reps: "6–8", rest: "2 min" },
-          { sets: 4, reps: "8", rest: "90 sec" }
+          { sets: 4, reps: "10", rest: "2 min" },
+          { sets: 5, reps: "5", rest: "2 min" }
         ],
         accessories: [
           "EZ-Bar Curl",
