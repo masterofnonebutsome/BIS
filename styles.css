@@ -3,21 +3,21 @@
 }
 
 :root {
-  --bg: #0f1115;
-  --panel: #171a21;
-  --panel-2: #20242d;
-  --text: #f4f6f8;
-  --muted: #9aa4b2;
-  --accent: #79e38d;
-  --accent-dark: #49b861;
-  --border: #2b313c;
-  --danger: #ff7d7d;
+  --bg: #74151c;
+  --panel: #000000;
+  --panel-2: #080808;
+  --text: #ffffff;
+  --muted: #d5d5d5;
+  --accent: #ffffff;
+  --accent-dark: #cccccc;
+  --border: #333333;
+  --danger: #ff4d4d;
 }
 
 body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #0b0d10 0%, var(--bg) 100%);
+  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
@@ -57,7 +57,7 @@ h1 {
 }
 
 .panel {
-  background: rgba(23, 26, 33, .96);
+  background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 20px;
@@ -79,7 +79,7 @@ h1 {
   display: grid;
   place-items: center;
   background: var(--accent);
-  color: #08100a;
+  color: #000000;
   font-weight: 900;
 }
 
@@ -125,7 +125,7 @@ button:disabled {
 
 .primary {
   background: var(--accent);
-  color: #071008;
+  color: #000000;
   font-weight: 900;
 }
 
@@ -165,7 +165,7 @@ button:disabled {
 }
 
 .exercise-card.compound {
-  border-color: rgba(121, 227, 141, .55);
+  border-color: rgba(255, 255, 255, .55);
 }
 
 .exercise-label {
@@ -188,11 +188,11 @@ button:disabled {
 }
 
 .pill {
-  background: #11151b;
+  background: #000000;
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 6px 9px;
-  color: #d9dee5;
+  color: #ffffff;
   font-size: .86rem;
 }
 
@@ -358,7 +358,7 @@ button:disabled {
 }
 
 
-/* V4.0 motivation button + video modal */
+/* V4.1 motivation button + video modal */
 .motivation-panel {
   display: flex;
   justify-content: center;

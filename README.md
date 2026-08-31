@@ -1,15 +1,15 @@
-# Workout Generator V4.0
+# Workout Generator V4.1
 
 Personal static workout generator for GitHub Pages.
 
-## New in V4.0
+## New in V4.1
 
 - Added **Press for Motivation**.
 - Each press randomly chooses from the 54 supplied YouTube videos.
 - The same motivation video will not play twice in a row when alternatives are available.
 - Videos are stored separately in `motivation.json` so the list is easy to expand.
 - `motivation.json` accepts either full YouTube URLs or 11-character video IDs.
-- Corrected the overall displayed/cache version to **V4.0**.
+- Corrected the overall displayed/cache version to **V4.1**.
 
 ## Existing features
 
@@ -33,7 +33,7 @@ Upload all six files to the root of the repository, replacing the existing files
 
 Do not upload an extra file such as `styles(1).css`; the site uses `styles.css`.
 
-After committing, give GitHub Pages a moment to deploy and refresh the site. The V4.0 cache-busting values are already included.
+After committing, give GitHub Pages a moment to deploy and refresh the site. The V4.1 cache-busting values are already included.
 
 ## Adding motivation videos later
 

@@ -25,7 +25,7 @@ const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=4.0", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.1", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -43,7 +43,7 @@ async function loadWorkoutData() {
 
 async function loadMotivationVideos() {
   try {
-    const response = await fetch("./motivation.json?v=4.0", { cache: "no-store" });
+    const response = await fetch("./motivation.json?v=4.1", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
     const data = await response.json();
     motivationVideos = Array.isArray(data) ? data : (data.videos || []);
