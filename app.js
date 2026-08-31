@@ -19,11 +19,13 @@ const typeButtons = document.querySelectorAll(".type-btn");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=3.1", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
     cardioCard.classList.add("muted");
+    coreCard.textContent = "Tap “Pick Core” for an optional core movement.";
+    coreCard.classList.add("muted");
     cardioBtn.disabled = false;
     coreBtn.disabled = false;
     typeButtons.forEach(btn => btn.disabled = false);
@@ -50,6 +52,11 @@ function pickCardio() {
 }
 
 function pickCore() {
+  if (!workoutData || !Array.isArray(workoutData.core) || !workoutData.core.length) {
+    coreCard.classList.remove("muted");
+    coreCard.innerHTML = `<strong>Core data is unavailable.</strong><br><span class="muted">Make sure the newest workouts.json is uploaded.</span>`;
+    return;
+  }
   selectedCore = randomItem(workoutData.core);
   coreCard.classList.remove("muted");
   coreCard.innerHTML = `<strong>${selectedCore.name}</strong><br><span class="muted">${selectedCore.scheme.sets} × ${selectedCore.scheme.reps}</span>`;
