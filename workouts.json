@@ -1,26 +1,34 @@
 {
   "cardio": [
-    {
-      "name": "Incline Treadmill Walk",
-      "detail": "10 min • moderate pace"
-    },
-    {
-      "name": "Stationary Bike",
-      "detail": "10 min • moderate intensity"
-    },
-    {
-      "name": "Row",
-      "detail": "1000 m • steady pace"
-    },
-    {
-      "name": "Run",
-      "detail": "1 mile • comfortable pace"
-    },
-    {
-      "name": "Stair Climber",
-      "detail": "8 min • moderate intensity"
-    }
-  ],
+  {
+    "name": "Run",
+    "detail": "4 × 400m • max pace • 3 min rest between intervals"
+  },
+  {
+    "name": "Run",
+    "detail": "2 miles • moderate pace"
+  },
+  {
+    "name": "Run",
+    "detail": "1 mile • quick pace"
+  },
+  {
+    "name": "StairMaster",
+    "detail": "20 min • manageable speed/intensity"
+  },
+  {
+    "name": "Bike",
+    "detail": "15 min"
+  },
+  {
+    "name": "Incline Walk",
+    "detail": "Flat/low incline • fast pace • settings TBD"
+  },
+  {
+    "name": "Incline Walk",
+    "detail": "High incline • slower pace • settings TBD"
+  }
+],
   "CHEST": {
     "compounds": [
       {
