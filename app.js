@@ -1,204 +1,4 @@
-const workoutData = {
-  cardio: [
-    { name: "Incline Treadmill Walk", detail: "20 min • moderate pace" },
-    { name: "Stationary Bike", detail: "15 min • moderate intensity" },
-    { name: "Run", detail: "1 mile • comfortable pace" },
-    { name: "Stair Climber", detail: "15 min • moderate intensity" }
-  ],
-
-  CHEST: {
-    compounds: [
-      {
-        name: "Barbell Bench Press",
-        schemes: [
-          { sets: 5, reps: "5", rest: "3 min" },
-          { sets: 4, reps: "10", rest: "2 min" },
-          { sets: 9, reps: "3", rest: "1 min" }
-        ],
-        accessories: [
-          "Incline Dumbbell Press",
-          "Cable Fly",
-          "Skull Crushers",
-          "Pec Deck",
-          "Lateral Raise",
-          "Triceps Pushdown",
-          "Dumbbell Pullover"
-        ]
-      },
-      {
-        name: "Incline Barbell Bench Press",
-        schemes: [
-          { sets: 5, reps: "5", rest: "3 min" },
-          { sets: 4, reps: "10", rest: "2 min" },
-          { sets: 9, reps: "3", rest: "1 min" }
-        ],
-        accessories: [
-          "Flat Dumbbell Press",
-          "Low-to-High Cable Fly",
-          "Pec Deck",
-          "Lateral Raise",
-          "Skull Crushers",
-          "Triceps Pushdown"
-        ]
-      },
-      {
-        name: "Weighted Dips",
-        schemes: [
-          { sets: 4, reps: "6–8", rest: "2 min" },
-          { sets: 3, reps: "8–10", rest: "90 sec" }
-        ],
-        accessories: [
-          "Dumbbell Bench Press",
-          "Cable Fly",
-          "Lateral Raise",
-          "Overhead Triceps Extension",
-          "Skull Crushers",
-          "Triceps Pushdown"
-        ]
-      }
-    ]
-  },
-
-  ARMS: {
-    compounds: [
-      {
-        name: "Close-Grip Bench Press",
-        schemes: [
-          { sets: 4, reps: "10", rest: "2 min" },
-          { sets: 5, reps: "5", rest: "2 min" }
-        ],
-        accessories: [
-          "EZ-Bar Curl",
-          "Rope Pushdown",
-          "Hammer Curl",
-          "Overhead Cable Extension",
-          "Preacher Curl",
-          "Skull Crushers"
-        ]
-      },
-      {
-        name: "Weighted Chin-Up",
-        schemes: [
-          { sets: 4, reps: "5–8", rest: "2–3 min" },
-          { sets: 3, reps: "6–10", rest: "2 min" }
-        ],
-        accessories: [
-          "Incline Dumbbell Curl",
-          "Rope Pushdown",
-          "Cable Curl",
-          "Overhead Triceps Extension",
-          "Hammer Curl"
-        ]
-      }
-    ]
-  },
-
-  LEGS: {
-    compounds: [
-      {
-        name: "Back Squat",
-        schemes: [
-          { sets: 5, reps: "5", rest: "3 min" },
-          { sets: 4, reps: "6–8", rest: "2–3 min" },
-          { sets: 4, reps: "8", rest: "2 min" }
-        ],
-        accessories: [
-          "Romanian Deadlift",
-          "Walking Lunge",
-          "Leg Extension",
-          "Hamstring Curl",
-          "Calf Raise",
-          "Bulgarian Split Squat"
-        ]
-      },
-      {
-        name: "Romanian Deadlift",
-        schemes: [
-          { sets: 4, reps: "6–8", rest: "2–3 min" },
-          { sets: 4, reps: "8–10", rest: "2 min" }
-        ],
-        accessories: [
-          "Front Squat",
-          "Leg Press",
-          "Walking Lunge",
-          "Hamstring Curl",
-          "Leg Extension",
-          "Calf Raise"
-        ]
-      },
-      {
-        name: "Leg Press",
-        schemes: [
-          { sets: 4, reps: "8–10", rest: "2 min" },
-          { sets: 4, reps: "10–12", rest: "90 sec" }
-        ],
-        accessories: [
-          "Romanian Deadlift",
-          "Bulgarian Split Squat",
-          "Leg Extension",
-          "Hamstring Curl",
-          "Calf Raise"
-        ]
-      }
-    ]
-  },
-
-  BACK: {
-    compounds: [
-      {
-        name: "Barbell Row",
-        schemes: [
-          { sets: 4, reps: "6–8", rest: "2 min" },
-          { sets: 4, reps: "8–10", rest: "90 sec" }
-        ],
-        accessories: [
-          "Lat Pulldown",
-          "Seated Cable Row",
-          "Face Pull",
-          "Rear Delt Fly",
-          "Straight-Arm Pulldown",
-          "Hammer Curl"
-        ]
-      },
-      {
-        name: "Weighted Pull-Up",
-        schemes: [
-          { sets: 4, reps: "5–8", rest: "2–3 min" },
-          { sets: 3, reps: "6–10", rest: "2 min" }
-        ],
-        accessories: [
-          "Chest-Supported Row",
-          "Lat Pulldown",
-          "Face Pull",
-          "Rear Delt Fly",
-          "Cable Curl"
-        ]
-      },
-      {
-        name: "Deadlift",
-        schemes: [
-          { sets: 5, reps: "3", rest: "3–4 min" },
-          { sets: 4, reps: "4–6", rest: "3 min" }
-        ],
-        accessories: [
-          "Chest-Supported Row",
-          "Lat Pulldown",
-          "Face Pull",
-          "Back Extension",
-          "Rear Delt Fly"
-        ]
-      }
-    ]
-  },
-
-  accessorySchemes: [
-    { sets: 3, reps: "8–12", rest: "60–90 sec" },
-    { sets: 4, reps: "10", rest: "75 sec" },
-    { sets: 3, reps: "12–15", rest: "60 sec" },
-    { sets: 4, reps: "8–10", rest: "90 sec" }
-  ]
-};
-
+let workoutData = null;
 let selectedType = null;
 let selectedCardio = null;
 let currentWorkout = null;
@@ -212,6 +12,30 @@ const completeBtn = document.getElementById("completeBtn");
 const calendarTitle = document.getElementById("calendarTitle");
 const calendarGrid = document.getElementById("calendarGrid");
 const historyDetail = document.getElementById("historyDetail");
+const typeButtons = document.querySelectorAll(".type-btn");
+
+async function loadWorkoutData() {
+  try {
+    const response = await fetch("./workouts.json", { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`Could not load workouts.json (${response.status})`);
+    }
+
+    workoutData = await response.json();
+
+    cardioCard.textContent = "Tap “Pick Cardio” to begin.";
+    cardioCard.classList.add("muted");
+    cardioBtn.disabled = false;
+    typeButtons.forEach(btn => btn.disabled = false);
+  } catch (error) {
+    console.error(error);
+    cardioCard.innerHTML = `
+      <strong>Workout data could not be loaded.</strong><br>
+      <span class="muted">Make sure workouts.json is in the same folder as index.html and app.js.</span>
+    `;
+  }
+}
 
 function randomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -220,22 +44,32 @@ function randomItem(arr) {
 function sample(arr, count) {
   const copy = [...arr];
   const results = [];
+
   while (copy.length && results.length < count) {
     const index = Math.floor(Math.random() * copy.length);
     results.push(copy.splice(index, 1)[0]);
   }
+
   return results;
 }
 
 function pickCardio() {
+  if (!workoutData) return;
+
   selectedCardio = randomItem(workoutData.cardio);
   cardioCard.classList.remove("muted");
-  cardioCard.innerHTML = `<strong>${selectedCardio.name}</strong><br><span class="muted">${selectedCardio.detail}</span>`;
+  cardioCard.innerHTML = `
+    <strong>${selectedCardio.name}</strong><br>
+    <span class="muted">${selectedCardio.detail}</span>
+  `;
 }
 
 function generateWorkout(type) {
+  if (!workoutData) return;
+
   selectedType = type;
-  document.querySelectorAll(".type-btn").forEach(btn => {
+
+  typeButtons.forEach(btn => {
     btn.classList.toggle("active", btn.dataset.type === type);
   });
 
@@ -243,6 +77,7 @@ function generateWorkout(type) {
 
   const compound = randomItem(workoutData[type].compounds);
   const compoundScheme = randomItem(compound.schemes);
+
   const accessories = sample(compound.accessories, 4).map(name => ({
     name,
     scheme: randomItem(workoutData.accessorySchemes)
@@ -268,11 +103,14 @@ function renderWorkout() {
   if (!currentWorkout) return;
 
   const compound = currentWorkout.compound;
+
   workoutOutput.innerHTML = `
     <div class="exercise-card">
       <div class="exercise-label">CARDIO</div>
       <div class="exercise-name">${currentWorkout.cardio.name}</div>
-      <div class="exercise-meta"><span class="pill">${currentWorkout.cardio.detail}</span></div>
+      <div class="exercise-meta">
+        <span class="pill">${currentWorkout.cardio.detail}</span>
+      </div>
     </div>
 
     <div class="exercise-card compound">
@@ -388,9 +226,16 @@ function showHistoryForDate(key) {
     <div>
       <h4>${entry.type} Workout${entries.length > 1 ? ` #${idx + 1}` : ""}</h4>
       <div><strong>Cardio:</strong> ${entry.cardio.name} — ${entry.cardio.detail}</div>
-      <div><strong>Compound:</strong> ${entry.compound.name} — ${entry.compound.scheme.sets} × ${entry.compound.scheme.reps}, rest ${entry.compound.scheme.rest}</div>
+      <div>
+        <strong>Compound:</strong>
+        ${entry.compound.name} —
+        ${entry.compound.scheme.sets} × ${entry.compound.scheme.reps},
+        rest ${entry.compound.scheme.rest}
+      </div>
       <ul>
-        ${entry.accessories.map(a => `<li>${a.name}: ${a.scheme.sets} × ${a.scheme.reps}, rest ${a.scheme.rest}</li>`).join("")}
+        ${entry.accessories.map(a =>
+          `<li>${a.name}: ${a.scheme.sets} × ${a.scheme.reps}, rest ${a.scheme.rest}</li>`
+        ).join("")}
       </ul>
     </div>
   `).join("<hr>");
@@ -398,7 +243,7 @@ function showHistoryForDate(key) {
 
 cardioBtn.addEventListener("click", pickCardio);
 
-document.querySelectorAll(".type-btn").forEach(btn => {
+typeButtons.forEach(btn => {
   btn.addEventListener("click", () => generateWorkout(btn.dataset.type));
 });
 
@@ -419,3 +264,4 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 });
 
 renderCalendar();
+loadWorkoutData();

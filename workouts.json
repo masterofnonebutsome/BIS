@@ -1,0 +1,325 @@
+{
+  "cardio": [
+    {
+      "name": "Incline Treadmill Walk",
+      "detail": "10 min • moderate pace"
+    },
+    {
+      "name": "Stationary Bike",
+      "detail": "10 min • moderate intensity"
+    },
+    {
+      "name": "Row",
+      "detail": "1000 m • steady pace"
+    },
+    {
+      "name": "Run",
+      "detail": "1 mile • comfortable pace"
+    },
+    {
+      "name": "Stair Climber",
+      "detail": "8 min • moderate intensity"
+    }
+  ],
+  "CHEST": {
+    "compounds": [
+      {
+        "name": "Barbell Bench Press",
+        "schemes": [
+          {
+            "sets": 5,
+            "reps": "5",
+            "rest": "3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8",
+            "rest": "2 min"
+          }
+        ],
+        "accessories": [
+          "Incline Dumbbell Press",
+          "Cable Fly",
+          "Pec Deck",
+          "Lateral Raise",
+          "Triceps Pushdown",
+          "Dumbbell Pullover"
+        ]
+      },
+      {
+        "name": "Incline Barbell Bench Press",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "6",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8",
+            "rest": "2 min"
+          },
+          {
+            "sets": 3,
+            "reps": "8–10",
+            "rest": "90 sec"
+          }
+        ],
+        "accessories": [
+          "Flat Dumbbell Press",
+          "Low-to-High Cable Fly",
+          "Pec Deck",
+          "Lateral Raise",
+          "Skull Crushers",
+          "Triceps Pushdown"
+        ]
+      },
+      {
+        "name": "Weighted Dips",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2 min"
+          },
+          {
+            "sets": 3,
+            "reps": "8–10",
+            "rest": "90 sec"
+          }
+        ],
+        "accessories": [
+          "Dumbbell Bench Press",
+          "Cable Fly",
+          "Lateral Raise",
+          "Overhead Triceps Extension",
+          "Triceps Pushdown"
+        ]
+      }
+    ]
+  },
+  "ARMS": {
+    "compounds": [
+      {
+        "name": "Close-Grip Bench Press",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8",
+            "rest": "90 sec"
+          }
+        ],
+        "accessories": [
+          "EZ-Bar Curl",
+          "Rope Pushdown",
+          "Hammer Curl",
+          "Overhead Cable Extension",
+          "Preacher Curl",
+          "Skull Crushers"
+        ]
+      },
+      {
+        "name": "Weighted Chin-Up",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "5–8",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 3,
+            "reps": "6–10",
+            "rest": "2 min"
+          }
+        ],
+        "accessories": [
+          "Incline Dumbbell Curl",
+          "Rope Pushdown",
+          "Cable Curl",
+          "Overhead Triceps Extension",
+          "Hammer Curl"
+        ]
+      }
+    ]
+  },
+  "LEGS": {
+    "compounds": [
+      {
+        "name": "Back Squat",
+        "schemes": [
+          {
+            "sets": 5,
+            "reps": "5",
+            "rest": "3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8",
+            "rest": "2 min"
+          }
+        ],
+        "accessories": [
+          "Romanian Deadlift",
+          "Walking Lunge",
+          "Leg Extension",
+          "Hamstring Curl",
+          "Calf Raise",
+          "Bulgarian Split Squat"
+        ]
+      },
+      {
+        "name": "Romanian Deadlift",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8–10",
+            "rest": "2 min"
+          }
+        ],
+        "accessories": [
+          "Front Squat",
+          "Leg Press",
+          "Walking Lunge",
+          "Hamstring Curl",
+          "Leg Extension",
+          "Calf Raise"
+        ]
+      },
+      {
+        "name": "Leg Press",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "8–10",
+            "rest": "2 min"
+          },
+          {
+            "sets": 4,
+            "reps": "10–12",
+            "rest": "90 sec"
+          }
+        ],
+        "accessories": [
+          "Romanian Deadlift",
+          "Bulgarian Split Squat",
+          "Leg Extension",
+          "Hamstring Curl",
+          "Calf Raise"
+        ]
+      }
+    ]
+  },
+  "BACK": {
+    "compounds": [
+      {
+        "name": "Barbell Row",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "6–8",
+            "rest": "2 min"
+          },
+          {
+            "sets": 4,
+            "reps": "8–10",
+            "rest": "90 sec"
+          }
+        ],
+        "accessories": [
+          "Lat Pulldown",
+          "Seated Cable Row",
+          "Face Pull",
+          "Rear Delt Fly",
+          "Straight-Arm Pulldown",
+          "Hammer Curl"
+        ]
+      },
+      {
+        "name": "Weighted Pull-Up",
+        "schemes": [
+          {
+            "sets": 4,
+            "reps": "5–8",
+            "rest": "2–3 min"
+          },
+          {
+            "sets": 3,
+            "reps": "6–10",
+            "rest": "2 min"
+          }
+        ],
+        "accessories": [
+          "Chest-Supported Row",
+          "Lat Pulldown",
+          "Face Pull",
+          "Rear Delt Fly",
+          "Cable Curl"
+        ]
+      },
+      {
+        "name": "Deadlift",
+        "schemes": [
+          {
+            "sets": 5,
+            "reps": "3",
+            "rest": "3–4 min"
+          },
+          {
+            "sets": 4,
+            "reps": "4–6",
+            "rest": "3 min"
+          }
+        ],
+        "accessories": [
+          "Chest-Supported Row",
+          "Lat Pulldown",
+          "Face Pull",
+          "Back Extension",
+          "Rear Delt Fly"
+        ]
+      }
+    ]
+  },
+  "accessorySchemes": [
+    {
+      "sets": 3,
+      "reps": "8–12",
+      "rest": "60–90 sec"
+    },
+    {
+      "sets": 4,
+      "reps": "10",
+      "rest": "75 sec"
+    },
+    {
+      "sets": 3,
+      "reps": "12–15",
+      "rest": "60 sec"
+    },
+    {
+      "sets": 4,
+      "reps": "8–10",
+      "rest": "90 sec"
+    }
+  ]
+}

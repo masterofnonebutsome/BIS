@@ -1,51 +1,68 @@
-# Workout Generator
+# Workout Generator V2
 
-A beginner-friendly workout generator designed for GitHub Pages.
+This version separates the workout database from the application logic.
 
-## Features
+## Files
 
-- Random cardio selection
-- Chest, Arms, Legs, and Back workout types
-- Random compound movement selection
-- Accessory exercises tied to the selected compound movement
-- Randomized sets, reps, and rest periods
-- Complete Workout button
-- Workout history stored in browser localStorage
-- Monthly calendar showing completed workout days
-- Mobile-friendly layout
+- `index.html` — page structure
+- `styles.css` — appearance
+- `app.js` — generator and calendar logic
+- `workouts.json` — workout content you can edit yourself
 
-## Run it locally
+## Editing your workouts
 
-Download the project and open `index.html` in a browser.
+For routine workout changes, edit only `workouts.json`.
 
-For the best experience, you can also use VS Code with the Live Server extension.
+Example cardio entry:
 
-## Publish with GitHub Pages
+```json
+{
+  "name": "Stair Climber",
+  "detail": "10 min • moderate intensity"
+}
+```
 
-1. Create a new GitHub repository.
-2. Upload `index.html`, `styles.css`, and `app.js`.
-3. Open the repository's Settings.
-4. Go to Pages.
-5. Under Build and deployment, choose "Deploy from a branch".
-6. Select the `main` branch and `/ (root)`.
-7. Save.
-8. GitHub will provide the public website address.
+Example compound:
 
-## Customize your workouts
+```json
+{
+  "name": "Barbell Bench Press",
+  "schemes": [
+    {
+      "sets": 5,
+      "reps": "5",
+      "rest": "3 min"
+    }
+  ],
+  "accessories": [
+    "Incline Dumbbell Press",
+    "Cable Fly",
+    "Triceps Pushdown"
+  ]
+}
+```
 
-Edit the `workoutData` object near the top of `app.js`.
+## Important JSON rules
 
-You can change:
+1. Text must be inside double quotes.
+2. Separate items with commas.
+3. Do not place a comma after the final item in a list.
+4. Keep brackets and braces paired correctly.
+5. Keep workout type keys (`CHEST`, `ARMS`, `LEGS`, `BACK`) uppercase unless you also change the app logic.
 
-- Cardio options
-- Compound exercises
-- Accessory pools
-- Compound set/rep schemes
-- Accessory set/rep schemes
-- Rest times
+## GitHub Pages
 
-## Current limitation
+Upload all four web files to the root of your repository:
 
-Workout history uses browser localStorage. This means workout history is saved on the specific browser/device you are using.
+- `index.html`
+- `styles.css`
+- `app.js`
+- `workouts.json`
 
-A later version can use a cloud database so history syncs between your phone, tablet, and computer.
+Commit the changes. GitHub Pages will redeploy automatically.
+
+## Local testing
+
+Because `app.js` loads `workouts.json` with `fetch()`, opening `index.html` directly as a `file://` page may be blocked by your browser.
+
+The GitHub Pages version will work normally. For local development, use a simple local web server such as VS Code Live Server.
