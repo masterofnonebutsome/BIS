@@ -1,29 +1,29 @@
-# Workout Generator V4.4
+# Workout Generator V4.5
 
-A simple strength-focused workout generator for GitHub Pages.
+A simple strength and 1.5-mile run training generator for GitHub Pages.
 
-## Strength structure
+## Strength
 
-Each workout retains a consistent anchor lift and alternates systematically between 5 × 5 and 5 × 3. Compounds use longer rest periods and stop with approximately 1–3 clean repetitions remaining.
+The Chest, Arms, Legs, and Back split retains fixed anchor lifts, systematic 5 × 5 / 5 × 3 loading, scheme-specific weight history, and controlled accessory variation.
 
-- Chest: Flat Barbell Bench Press
-- Arms: Barbell Overhead Press
-- Legs: Back Squat
-- Back: Weighted Pull-Ups
+## 1.5-mile run plan
 
-## Leg day structure
+The Cardio card now follows a planned rotation:
 
-Every generated Leg day contains:
+1. Interval
+2. Easy aerobic
+3. Threshold
+4. Repeat
 
-1. Back Squat — alternating 5 × 5 and 5 × 3
-2. RDL variation — 3 × 6–8
-3. Walking Lunges, Leg Press, or Hack Squat — 3 × 8–10
-4. Seated, Lying, or Standing Hamstring Curl — 3 × 10–15
-5. Leg Extensions — guaranteed, 3 × 10–15
-6. Calf variation — 3 × 10–15
+Interval sessions rotate among 200 m, 400 m, 600 m, and 800 m prescriptions while avoiding the most recent variation. Easy and threshold work support aerobic capacity and sustainable pace.
 
-The RDL, secondary movement, hamstring curl, and calf slots avoid the variations used during the most recent Leg workout whenever the pools allow it.
+## Compact run tracking
 
-## Storage
+- Runs can be logged independently from lifting workouts.
+- Interval sessions record one average repeat time.
+- Easy and threshold sessions record one total work time.
+- The Cardio card shows the last result for the exact session.
+- Runs appear in the existing calendar, where accidental entries can also be deleted.
+- Run data uses browser-local `runHistory`, so different people and devices retain separate histories.
 
-Existing browser-local history and scheme-specific compound weights remain preserved. Each browser and device continues to keep its own separate data.
+Existing lifting history and compound-weight records remain preserved.
