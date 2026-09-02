@@ -305,7 +305,6 @@ function pickCore() {
 
 function syncIndependentSelections() {
   if (!currentWorkout) return;
-  currentWorkout.cardio = selectedCardio;
   currentWorkout.core = selectedCore;
   renderWorkout();
 }
@@ -401,7 +400,7 @@ function generateWorkout(type) {
   currentWorkout = {
     date: new Date().toISOString(),
     type,
-    cardio: selectedCardio,
+    cardio: null,
     core: selectedCore,
     exercises: generators[type]()
   };
