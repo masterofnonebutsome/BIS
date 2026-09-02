@@ -1,5 +1,5 @@
 {
-  "version": "4.4",
+  "version": "4.5",
   "compoundSchemes": [
     {
       "sets": 5,
@@ -285,5 +285,68 @@
       "Spider Curls",
       "Cable Rope Curls"
     ]
+  },
+  "cardioPlan": {
+    "order": [
+      "INTERVAL",
+      "EASY",
+      "THRESHOLD"
+    ],
+    "sessions": {
+      "INTERVAL": [
+        {
+          "id": "interval-400",
+          "name": "6 × 400m",
+          "detail": "Goal 1.5-mile pace • 90–120 sec recovery",
+          "resultLabel": "Average 400m time"
+        },
+        {
+          "id": "interval-600",
+          "name": "4 × 600m",
+          "detail": "Goal 1.5-mile pace • 2–3 min recovery",
+          "resultLabel": "Average 600m time"
+        },
+        {
+          "id": "interval-800",
+          "name": "3 × 800m",
+          "detail": "Goal 1.5-mile pace • about 3 min recovery",
+          "resultLabel": "Average 800m time"
+        },
+        {
+          "id": "interval-200",
+          "name": "8 × 200m",
+          "detail": "Slightly faster than goal pace • 60–90 sec recovery",
+          "resultLabel": "Average 200m time"
+        }
+      ],
+      "EASY": [
+        {
+          "id": "easy-25-40",
+          "name": "Easy Run",
+          "detail": "25–40 min conversational pace • optional 4–6 relaxed strides",
+          "resultLabel": "Total run time"
+        }
+      ],
+      "THRESHOLD": [
+        {
+          "id": "threshold-20",
+          "name": "Tempo Run",
+          "detail": "15–20 min comfortably hard and controlled",
+          "resultLabel": "Total run time"
+        },
+        {
+          "id": "threshold-3x6",
+          "name": "3 × 6 min Threshold",
+          "detail": "2 min easy jog between repetitions",
+          "resultLabel": "Total work time"
+        },
+        {
+          "id": "threshold-2x10",
+          "name": "2 × 8–10 min Threshold",
+          "detail": "3 min easy jog between repetitions",
+          "resultLabel": "Total work time"
+        }
+      ]
+    }
   }
 }
