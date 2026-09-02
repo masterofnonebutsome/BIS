@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Workout Generator V4.4</title>
-  <link rel="stylesheet" href="styles.css?v=4.4-dew" />
+  <title>Workout Generator V4.5</title>
+  <link rel="stylesheet" href="styles.css?v=4.5-dew" />
 </head>
 <body>
   <main class="app">
     <header class="hero">
       <div>
-        <p class="eyebrow">PERSONAL TRAINING TOOL • V4.4</p>
+        <p class="eyebrow">PERSONAL TRAINING TOOL • V4.5</p>
         <h1>Workout Generator</h1>
         <p class="sub">Independent cardio and core. Smart workout rules for Chest, Arms, Legs, and Back.</p>
       </div>
@@ -19,7 +19,16 @@
     <section class="panel">
       <div class="section-title"><span>1</span><h2>Cardio + Core</h2></div>
       <div id="cardioCard" class="result-card muted">Loading workout data…</div>
-      <button id="cardioBtn" class="secondary" disabled>Pick Cardio</button>
+      <button id="cardioBtn" class="secondary" disabled>Show Next Run</button>
+      <div id="runLogRow" class="run-log-row" hidden>
+        <div class="run-log-copy">
+          <label id="runResultLabel" for="runResultInput">Run result</label>
+          <span id="lastRunResult" class="muted"></span>
+        </div>
+        <input id="runResultInput" class="run-result-input" type="text" inputmode="numeric" placeholder="MM:SS" maxlength="8">
+        <button id="logRunBtn" class="primary" type="button">Log Run</button>
+      </div>
+      <div id="runLogStatus" class="run-log-status muted" aria-live="polite"></div>
       <div id="coreCard" class="result-card muted" style="margin-top:12px">Tap “Pick Core” for an optional core movement.</div>
       <button id="coreBtn" class="secondary" disabled>Pick Core</button>
     </section>
@@ -70,6 +79,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=4.4"></script>
+  <script src="app.js?v=4.5"></script>
 </body>
 </html>
