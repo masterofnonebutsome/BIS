@@ -1,10 +1,10 @@
 {
-  "version": "4.1",
+  "version": "4.2",
   "compoundSchemes": [
     {
-      "sets": 9,
+      "sets": 5,
       "reps": "3",
-      "rest": "1:00"
+      "rest": "2:30"
     },
     {
       "sets": 5,
@@ -18,7 +18,7 @@
     }
   ],
   "accessoryScheme": {
-    "sets": 4,
+    "sets": 3,
     "reps": "10–15",
     "rest": "1:30"
   },
@@ -140,7 +140,7 @@
       }
     ],
     "complementaryScheme": {
-      "sets": 4,
+      "sets": 3,
       "reps": "10",
       "rest": "1:30"
     },
@@ -198,7 +198,7 @@
       {
         "name": "Wrist Curls",
         "scheme": {
-          "sets": 4,
+          "sets": 3,
           "reps": "10–15",
           "rest": "1:30"
         }
@@ -206,7 +206,7 @@
       {
         "name": "Reverse Wrist Curls",
         "scheme": {
-          "sets": 4,
+          "sets": 3,
           "reps": "10–15",
           "rest": "1:30"
         }
@@ -214,7 +214,7 @@
       {
         "name": "Reverse EZ-Bar Curls",
         "scheme": {
-          "sets": 4,
+          "sets": 3,
           "reps": "10–15",
           "rest": "1:30"
         }
@@ -295,9 +295,18 @@
   },
   "BACK": {
     "compounds": [
-      "Single-Arm Dumbbell Row",
-      "Barbell Row",
-      "Weighted Pull-Ups"
+      {
+        "name": "Single-Arm Dumbbell Row",
+        "pattern": "horizontal"
+      },
+      {
+        "name": "Barbell Row",
+        "pattern": "horizontal"
+      },
+      {
+        "name": "Weighted Pull-Ups",
+        "pattern": "vertical"
+      }
     ],
     "traps": [
       "Barbell Shrugs",
@@ -306,10 +315,26 @@
       "Cable Shrugs",
       "Chest-Supported Dumbbell Shrugs"
     ],
-    "backAccessories": [
-      "Chest-Supported Row Machine",
-      "Pullovers",
+    "verticalPulls": [
+      "Weighted Pull-Ups",
       "Lat Pulldowns"
+    ],
+    "horizontalPulls": [
+      "Single-Arm Dumbbell Row",
+      "Barbell Row",
+      "Chest-Supported Row Machine"
+    ],
+    "rearDelts": [
+      "Face Pulls",
+      "Rear Delt Fly",
+      "Reverse Pec Deck"
+    ],
+    "biceps": [
+      "Hammer Curls",
+      "Dumbbell Curls",
+      "Preacher Curls",
+      "Spider Curls",
+      "Cable Rope Curls"
     ]
   }
 }
