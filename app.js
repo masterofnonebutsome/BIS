@@ -25,7 +25,7 @@ const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=4.1", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.2", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -43,7 +43,7 @@ async function loadWorkoutData() {
 
 async function loadMotivationVideos() {
   try {
-    const response = await fetch("./motivation.json?v=4.1", { cache: "no-store" });
+    const response = await fetch("./motivation.json?v=4.2", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
     const data = await response.json();
     motivationVideos = Array.isArray(data) ? data : (data.videos || []);
@@ -114,6 +114,10 @@ function getCompoundWeights() {
 function saveCompoundWeights(weights) { localStorage.setItem("compoundWeights", JSON.stringify(weights)); }
 
 
+function compoundSchemeKey(compound) {
+  return `${compound.name}::${compound.scheme.sets}x${compound.scheme.reps}`;
+}
+
 function rebuildCompoundWeightsFromHistory() {
   const history = getHistory();
   const latest = {};
@@ -122,10 +126,11 @@ function rebuildCompoundWeightsFromHistory() {
     const compound = entry.exercises[0];
     if (!compound?.name || compound.weightUsed === undefined || compound.weightUsed === null || compound.weightUsed === "") return;
     const completedAt = entry.completedAt || entry.date || "";
-    const existingTime = latest[compound.name]?.completedAt ? new Date(latest[compound.name].completedAt).getTime() : -Infinity;
+    const key = compoundSchemeKey(compound);
+    const existingTime = latest[key]?.completedAt ? new Date(latest[key].completedAt).getTime() : -Infinity;
     const candidateTime = completedAt ? new Date(completedAt).getTime() : -Infinity;
-    if (!latest[compound.name] || candidateTime >= existingTime) {
-      latest[compound.name] = { weight: compound.weightUsed, completedAt };
+    if (!latest[key] || candidateTime >= existingTime) {
+      latest[key] = { weight: compound.weightUsed, completedAt };
     }
   });
   saveCompoundWeights(latest);
@@ -312,15 +317,16 @@ function generateLegs() {
 function generateBack() {
   const d = workoutData.BACK;
   const recent = previousExerciseNames("BACK");
-  const biceps = sampleAvoidingRecent(workoutData.ARMS.biceps, 2, recent);
-  const backs = sampleAvoidingRecent(d.backAccessories, 2, recent);
+  const compound = pickCompound("BACK", d.compounds);
+  const verticalPool = d.verticalPulls.filter(name => name !== compound.name);
+  const horizontalPool = d.horizontalPulls.filter(name => name !== compound.name);
   return [
-    exercise(pickCompound("BACK", d.compounds), "COMPOUND", randomItem(workoutData.compoundSchemes)),
+    exercise(compound.name, "COMPOUND • " + compound.pattern.toUpperCase() + " PULL", randomItem(workoutData.compoundSchemes)),
     accessory(pickAvoidingRecent(d.traps, recent), "TRAPS"),
-    accessory(backs[0], "BACK"),
-    accessory(biceps[0], "BICEPS"),
-    accessory(backs[1], "BACK"),
-    accessory(biceps[1], "BICEPS")
+    accessory(pickAvoidingRecent(verticalPool, recent), "VERTICAL PULL"),
+    accessory(pickAvoidingRecent(d.biceps, recent), "BICEPS"),
+    accessory(pickAvoidingRecent(horizontalPool, recent), "HORIZONTAL PULL"),
+    accessory(pickAvoidingRecent(d.rearDelts, recent), "REAR DELTS")
   ];
 }
 
@@ -349,10 +355,12 @@ function renderScheme(s) {
 
 function renderCompoundWeight(exerciseItem) {
   const weights = getCompoundWeights();
-  const saved = weights[exerciseItem.name];
+  const schemeKey = compoundSchemeKey(exerciseItem);
+  const saved = weights[schemeKey] || weights[exerciseItem.name];
+  const schemeLabel = `${exerciseItem.scheme.sets}×${exerciseItem.scheme.reps}`;
   const lastText = saved?.weight !== undefined && saved?.weight !== ""
-    ? `<div class="last-weight">Last weight: <strong>${saved.weight} lb</strong></div>`
-    : `<div class="last-weight muted">No previous weight saved.</div>`;
+    ? `<div class="last-weight">Last ${schemeLabel}: <strong>${saved.weight} lb</strong></div>`
+    : `<div class="last-weight muted">No previous ${schemeLabel} weight saved.</div>`;
   const value = exerciseItem.weightUsed ?? "";
   return `
     <div class="weight-box">
@@ -392,7 +400,7 @@ function completeWorkout() {
     if (weight !== "") {
       compound.weightUsed = weight;
       const weights = getCompoundWeights();
-      weights[compound.name] = { weight, completedAt: new Date().toISOString() };
+      weights[compoundSchemeKey(compound)] = { weight, completedAt: new Date().toISOString() };
       saveCompoundWeights(weights);
     }
   }
