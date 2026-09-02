@@ -25,7 +25,7 @@ const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=4.3", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.4", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -43,7 +43,7 @@ async function loadWorkoutData() {
 
 async function loadMotivationVideos() {
   try {
-    const response = await fetch("./motivation.json?v=4.3", { cache: "no-store" });
+    const response = await fetch("./motivation.json?v=4.4", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
     const data = await response.json();
     motivationVideos = Array.isArray(data) ? data : (data.videos || []);
@@ -284,43 +284,22 @@ function generateLegs() {
   const d = workoutData.LEGS;
   const recent = previousExerciseNames("LEGS");
   const compound = pickCompound("LEGS", d.compounds);
-  const scheme = nextCompoundScheme("LEGS");
-  const ex = [exercise(compound.name, "COMPOUND", scheme)];
+  const hinge = pickAvoidingRecent(d.rdlPattern, recent);
+  const secondary = pickAvoidingRecent(d.secondaryLeg, recent);
+  const hamstringCurl = pickAvoidingRecent(d.hamstrings, recent);
+  const calf = pickAvoidingRecent(d.calves, recent);
+  const secondaryScheme = secondary === "Walking Lunges"
+    ? d.secondaryScheme
+    : d.secondaryBilateralScheme;
 
-  if (compound.kind === "squat") {
-    const h = pickAvoidingRecent(d.hamstrings, recent);
-    const q = sampleAvoidingRecent(d.quads, 2, recent);
-    const c = pickAvoidingRecent(d.calves, recent);
-    ex.push(
-      accessory(d.smithRDL, "HAMSTRING / RDL"),
-      accessory(q[0], "QUAD"),
-      accessory(c, "CALF"),
-      accessory(h, "HAMSTRING"),
-      accessory(q[1], "QUAD")
-    );
-  } else if (compound.kind === "rdl") {
-    const q2 = pickAvoidingRecent(d.squatPattern, recent);
-    const remainingQuads = d.quads.filter(x => x !== q2);
-    const calves = sampleAvoidingRecent(d.calves, 2, recent);
-    ex.push(
-      accessory(q2, "QUAD / SQUAT PATTERN"),
-      accessory(calves[0], "CALF"),
-      accessory(pickAvoidingRecent(d.hamstrings, recent), "HAMSTRING"),
-      accessory(pickAvoidingRecent(remainingQuads, recent), "QUAD"),
-      accessory(calves[1], "CALF")
-    );
-  } else {
-    const rdlChoices = d.rdlPattern.filter(x => x !== compound.name);
-    const q = sampleAvoidingRecent(d.quads, 2, recent);
-    ex.push(
-      accessory(pickAvoidingRecent(rdlChoices, recent), "HAMSTRING / RDL"),
-      accessory(q[0], "QUAD"),
-      accessory(pickAvoidingRecent(d.calves, recent), "CALF"),
-      accessory(pickAvoidingRecent(d.hamstrings, recent), "HAMSTRING"),
-      accessory(q[1], "QUAD")
-    );
-  }
-  return ex;
+  return [
+    exercise(compound.name, "COMPOUND", nextCompoundScheme("LEGS")),
+    exercise(hinge, "HIP HINGE", d.hingeScheme),
+    exercise(secondary, "SECONDARY LEG", secondaryScheme),
+    exercise(hamstringCurl, "HAMSTRING CURL", d.isolationScheme),
+    exercise(d.legExtension, "QUAD EXTENSION • GUARANTEED", d.isolationScheme),
+    exercise(calf, "CALVES", d.isolationScheme)
+  ];
 }
 
 function generateBack() {
