@@ -25,7 +25,7 @@ const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=4.2", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.3", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
     cardioCard.textContent = "Tap “Pick Cardio” to begin.";
@@ -43,7 +43,7 @@ async function loadWorkoutData() {
 
 async function loadMotivationVideos() {
   try {
-    const response = await fetch("./motivation.json?v=4.2", { cache: "no-store" });
+    const response = await fetch("./motivation.json?v=4.3", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
     const data = await response.json();
     motivationVideos = Array.isArray(data) ? data : (data.videos || []);
@@ -200,6 +200,15 @@ function pickCompound(type, compounds) {
   return randomItem(choices.length ? choices : compounds);
 }
 
+function nextCompoundScheme(type) {
+  const previous = getMostRecentWorkout(type);
+  const previousScheme = previous?.exercises?.[0]?.scheme;
+  const targetReps = previousScheme?.sets === 5 && String(previousScheme.reps) === "5" ? "3" : "5";
+  return workoutData.compoundSchemes.find(scheme => String(scheme.reps) === targetReps)
+    || workoutData.compoundSchemes[0];
+}
+
+
 function pickCardio() {
   selectedCardio = randomItem(workoutData.cardio);
   cardioCard.classList.remove("muted");
@@ -235,7 +244,7 @@ function generateChest() {
   const secondShoulder = pickAvoidingRecent(shoulderPool, recent);
   const complementary = pickAvoidingRecent(compound.complementary, recent);
   return [
-    exercise(compound.name, "COMPOUND", randomItem(workoutData.compoundSchemes)),
+    exercise(compound.name, "COMPOUND", nextCompoundScheme("CHEST")),
     exercise(complementary, "COMPLEMENTARY PRESS", d.complementaryScheme),
     accessory(d.shoulderFirst, "SHOULDER"),
     accessory(triceps[0], "TRICEPS"),
@@ -249,12 +258,12 @@ function generateArms() {
   const recent = previousExerciseNames("ARMS");
   const compound = pickCompound("ARMS", d.compounds);
   let categories;
-  if (compound.kind === "biceps") categories = ["triceps", "biceps", "triceps", "biceps", "triceps"];
-  else if (compound.kind === "triceps") categories = ["biceps", "triceps", "biceps", "triceps", "biceps"];
+  if (compound.kind === "biceps") categories = ["triceps", "biceps", "triceps", "biceps"];
+  else if (compound.kind === "triceps") categories = ["biceps", "triceps", "biceps", "triceps"];
   else {
     const first = Math.random() < 0.5 ? "biceps" : "triceps";
     const other = first === "biceps" ? "triceps" : "biceps";
-    categories = [first, other, first, other, first];
+    categories = [first, other, first, other];
   }
   const neededB = categories.filter(x => x === "biceps").length;
   const neededT = categories.filter(x => x === "triceps").length;
@@ -264,7 +273,7 @@ function generateArms() {
   const middle = categories.map(cat => accessory(cat === "biceps" ? biceps[bi++] : triceps[ti++], cat.toUpperCase()));
   const forearm = pickAvoidingRecent(d.forearms, recent, item => item.name);
   return [
-    exercise(compound.name, "COMPOUND", randomItem(workoutData.compoundSchemes)),
+    exercise(compound.name, "COMPOUND", nextCompoundScheme("ARMS")),
     ...middle,
     accessory(d.lateralRaise, "SHOULDER"),
     exercise(forearm.name, "FOREARMS", forearm.scheme)
@@ -275,7 +284,7 @@ function generateLegs() {
   const d = workoutData.LEGS;
   const recent = previousExerciseNames("LEGS");
   const compound = pickCompound("LEGS", d.compounds);
-  const scheme = randomItem(workoutData.compoundSchemes);
+  const scheme = nextCompoundScheme("LEGS");
   const ex = [exercise(compound.name, "COMPOUND", scheme)];
 
   if (compound.kind === "squat") {
@@ -321,7 +330,7 @@ function generateBack() {
   const verticalPool = d.verticalPulls.filter(name => name !== compound.name);
   const horizontalPool = d.horizontalPulls.filter(name => name !== compound.name);
   return [
-    exercise(compound.name, "COMPOUND • " + compound.pattern.toUpperCase() + " PULL", randomItem(workoutData.compoundSchemes)),
+    exercise(compound.name, "COMPOUND • " + compound.pattern.toUpperCase() + " PULL", nextCompoundScheme("BACK")),
     accessory(pickAvoidingRecent(d.traps, recent), "TRAPS"),
     accessory(pickAvoidingRecent(verticalPool, recent), "VERTICAL PULL"),
     accessory(pickAvoidingRecent(d.biceps, recent), "BICEPS"),
@@ -350,7 +359,8 @@ function generateWorkout(type) {
 
 function renderScheme(s) {
   const rest = s.rest && s.rest !== "—" ? `<span class="pill">Rest ${s.rest}</span>` : "";
-  return `<span class="pill">${s.sets} sets</span><span class="pill">${s.reps} reps</span>${rest}`;
+  const effort = s.rir ? `<span class="pill">Stop with ${s.rir} reps left</span>` : "";
+  return `<span class="pill">${s.sets} sets</span><span class="pill">${s.reps} reps</span>${rest}${effort}`;
 }
 
 function renderCompoundWeight(exerciseItem) {
@@ -358,9 +368,13 @@ function renderCompoundWeight(exerciseItem) {
   const schemeKey = compoundSchemeKey(exerciseItem);
   const saved = weights[schemeKey] || weights[exerciseItem.name];
   const schemeLabel = `${exerciseItem.scheme.sets}×${exerciseItem.scheme.reps}`;
-  const lastText = saved?.weight !== undefined && saved?.weight !== ""
-    ? `<div class="last-weight">Last ${schemeLabel}: <strong>${saved.weight} lb</strong></div>`
-    : `<div class="last-weight muted">No previous ${schemeLabel} weight saved.</div>`;
+  const lastWeight = Number(saved?.weight);
+  const increment = currentWorkout?.type === "LEGS" ? 10 : 5;
+  const hasSavedWeight = saved?.weight !== undefined && saved?.weight !== "" && Number.isFinite(lastWeight);
+  const lastText = hasSavedWeight
+    ? `<div class="last-weight">Last ${schemeLabel}: <strong>${saved.weight} lb</strong></div>
+       <div class="last-weight muted">If every rep was clean, try <strong>${lastWeight + increment} lb</strong>. Otherwise repeat ${saved.weight} lb.</div>`
+    : `<div class="last-weight muted">No previous ${schemeLabel} weight saved. Start conservatively.</div>`;
   const value = exerciseItem.weightUsed ?? "";
   return `
     <div class="weight-box">
