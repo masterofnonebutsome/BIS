@@ -1,5 +1,5 @@
 {
-  "version": "4.3",
+  "version": "4.4",
   "compoundSchemes": [
     {
       "sets": 5,
@@ -198,9 +198,9 @@
       "Smith Machine Squat"
     ],
     "rdlPattern": [
-      "Smith Machine RDL",
       "Barbell RDL",
-      "Dumbbell RDL"
+      "Dumbbell RDL",
+      "Smith Machine RDL"
     ],
     "hamstrings": [
       "Lying Hamstring Curl",
@@ -218,7 +218,37 @@
       "Seated Calf Raise",
       "Leg Press Calf Raise",
       "Single-Leg Calf Raise"
-    ]
+    ],
+    "secondaryLeg": [
+      "Walking Lunges",
+      "Leg Press",
+      "Hack Squat"
+    ],
+    "legExtension": "Leg Extensions",
+    "hingeScheme": {
+      "sets": 3,
+      "reps": "6–8",
+      "rest": "2:00–3:00",
+      "rir": "1–3"
+    },
+    "secondaryScheme": {
+      "sets": 3,
+      "reps": "8–10 per leg",
+      "rest": "2:00–3:00",
+      "rir": "1–3"
+    },
+    "secondaryBilateralScheme": {
+      "sets": 3,
+      "reps": "8–10",
+      "rest": "2:00–3:00",
+      "rir": "1–3"
+    },
+    "isolationScheme": {
+      "sets": 3,
+      "reps": "10–15",
+      "rest": "1:30–2:00",
+      "rir": "1–2"
+    }
   },
   "BACK": {
     "compounds": [
