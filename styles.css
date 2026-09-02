@@ -475,3 +475,59 @@ h1 {
   color: var(--danger);
   border-color: rgba(242, 38, 53, .55);
 }
+
+
+/* V4.5 compact run logging */
+.run-log-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) 110px auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 12px;
+}
+
+.run-log-row[hidden] {
+  display: none;
+}
+
+.run-log-copy {
+  display: grid;
+  gap: 3px;
+}
+
+.run-log-copy label {
+  font-size: .82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.run-result-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.run-result-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.run-log-status {
+  min-height: 1.2em;
+  margin-top: 6px;
+  font-size: .88rem;
+}
+
+@media (max-width: 650px) {
+  .run-log-row {
+    grid-template-columns: 1fr 100px;
+  }
+
+  .run-log-copy {
+    grid-column: 1 / -1;
+  }
+}
