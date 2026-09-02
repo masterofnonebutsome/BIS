@@ -10,6 +10,12 @@ const cardioCard = document.getElementById("cardioCard");
 const coreCard = document.getElementById("coreCard");
 const cardioBtn = document.getElementById("cardioBtn");
 const coreBtn = document.getElementById("coreBtn");
+const runLogRow = document.getElementById("runLogRow");
+const runResultLabel = document.getElementById("runResultLabel");
+const runResultInput = document.getElementById("runResultInput");
+const lastRunResult = document.getElementById("lastRunResult");
+const logRunBtn = document.getElementById("logRunBtn");
+const runLogStatus = document.getElementById("runLogStatus");
 const workoutOutput = document.getElementById("workoutOutput");
 const regenerateBtn = document.getElementById("regenerateBtn");
 const completeBtn = document.getElementById("completeBtn");
@@ -25,10 +31,10 @@ const closeMotivation = document.getElementById("closeMotivation");
 
 async function loadWorkoutData() {
   try {
-    const response = await fetch("./workouts.json?v=4.4", { cache: "no-store" });
+    const response = await fetch("./workouts.json?v=4.5", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load workouts.json (${response.status})`);
     workoutData = await response.json();
-    cardioCard.textContent = "Tap “Pick Cardio” to begin.";
+    cardioCard.textContent = "Tap “Show Next Run” for your next 1.5-mile training session.";
     cardioCard.classList.add("muted");
     coreCard.textContent = "Tap “Pick Core” for an optional core movement.";
     coreCard.classList.add("muted");
@@ -43,7 +49,7 @@ async function loadWorkoutData() {
 
 async function loadMotivationVideos() {
   try {
-    const response = await fetch("./motivation.json?v=4.4", { cache: "no-store" });
+    const response = await fetch("./motivation.json?v=4.5", { cache: "no-store" });
     if (!response.ok) throw new Error(`Could not load motivation.json (${response.status})`);
     const data = await response.json();
     motivationVideos = Array.isArray(data) ? data : (data.videos || []);
@@ -107,6 +113,15 @@ function getHistory() {
   catch { return {}; }
 }
 function saveHistory(h) { localStorage.setItem("workoutHistory", JSON.stringify(h)); }
+function getRunHistory() {
+  try {
+    const history = JSON.parse(localStorage.getItem("runHistory") || "[]");
+    return Array.isArray(history) ? history : [];
+  } catch {
+    return [];
+  }
+}
+function saveRunHistory(history) { localStorage.setItem("runHistory", JSON.stringify(history)); }
 function getCompoundWeights() {
   try { return JSON.parse(localStorage.getItem("compoundWeights") || "{}"); }
   catch { return {}; }
@@ -209,11 +224,71 @@ function nextCompoundScheme(type) {
 }
 
 
+function getNextRunType() {
+  const plan = workoutData.cardioPlan;
+  const history = getRunHistory();
+  if (!history.length) return plan.order[0];
+  const lastType = history[history.length - 1]?.session?.type;
+  const index = plan.order.indexOf(lastType);
+  return plan.order[(index + 1 + plan.order.length) % plan.order.length];
+}
+
+function getLastResultForRun(id) {
+  return [...getRunHistory()].reverse().find(entry => entry?.session?.id === id) || null;
+}
+
 function pickCardio() {
-  selectedCardio = randomItem(workoutData.cardio);
+  const plan = workoutData.cardioPlan;
+  const type = getNextRunType();
+  const pool = plan.sessions[type] || [];
+  const history = getRunHistory();
+  const previousId = [...history].reverse().find(entry => entry?.session?.type === type)?.session?.id;
+  const choices = pool.length > 1 ? pool.filter(session => session.id !== previousId) : pool;
+  const chosen = randomItem(choices.length ? choices : pool);
+  selectedCardio = { ...chosen, type };
+
   cardioCard.classList.remove("muted");
-  cardioCard.innerHTML = `<strong>${selectedCardio.name}</strong><br><span class="muted">${selectedCardio.detail}</span>`;
+  cardioCard.innerHTML = `<div class="exercise-label">${type} RUN</div><strong>${chosen.name}</strong><br><span class="muted">${chosen.detail}</span>`;
+  runLogRow.hidden = false;
+  runResultLabel.textContent = type === "INTERVAL" ? chosen.resultLabel : "Run time";
+  runResultInput.value = "";
+  runResultInput.placeholder = type === "INTERVAL" ? "M:SS" : "MM:SS";
+  const previous = getLastResultForRun(chosen.id);
+  lastRunResult.textContent = previous ? `Last: ${previous.result}` : "No previous result";
+  runLogStatus.textContent = "";
   syncIndependentSelections();
+}
+
+function validTimeResult(value) {
+  return /^\d{1,2}:\d{2}(?::\d{2})?$/.test(value);
+}
+
+function logRun() {
+  if (!selectedCardio) {
+    runLogStatus.textContent = "Show your next run first.";
+    return;
+  }
+  const result = runResultInput.value.trim();
+  if (!validTimeResult(result)) {
+    runLogStatus.textContent = "Enter a time like 1:42 or 24:30.";
+    runResultInput.focus();
+    return;
+  }
+
+  const history = getRunHistory();
+  history.push({
+    session: { ...selectedCardio },
+    result,
+    completedAt: new Date().toISOString()
+  });
+  saveRunHistory(history);
+  lastRunResult.textContent = `Last: ${result}`;
+  runLogStatus.textContent = "Run saved ✓";
+  runResultInput.value = "";
+  renderCalendar();
+  setTimeout(() => {
+    if (runLogStatus.textContent === "Run saved ✓") runLogStatus.textContent = "";
+  }, 1600);
 }
 
 function pickCore() {
@@ -322,7 +397,6 @@ function generateWorkout(type) {
   if (!workoutData) return;
   selectedType = type;
   typeButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.type === type));
-  if (!selectedCardio) pickCardio();
   const generators = { CHEST: generateChest, ARMS: generateArms, LEGS: generateLegs, BACK: generateBack };
   currentWorkout = {
     date: new Date().toISOString(),
@@ -400,7 +474,7 @@ function completeWorkout() {
 
   const now = new Date(), key = dateKey(now), history = getHistory();
   if (!history[key]) history[key] = [];
-  history[key].push({ ...currentWorkout, cardio: selectedCardio, core: selectedCore, completedAt: now.toISOString() });
+  history[key].push({ ...currentWorkout, cardio: null, core: selectedCore, completedAt: now.toISOString() });
   saveHistory(history);
   renderCalendar();
   renderWorkout();
@@ -423,31 +497,55 @@ function renderCalendar() {
     const key = dateKey(new Date(year, month, day)), btn = document.createElement("button");
     btn.className = "calendar-day";
     btn.textContent = day;
-    if (history[key]?.length) btn.classList.add("completed");
+    const hasRun = getRunHistory().some(entry => dateKey(new Date(entry.completedAt)) === key);
+    if (history[key]?.length || hasRun) btn.classList.add("completed");
     if (key === todayKey) btn.classList.add("today");
     btn.addEventListener("click", () => showHistoryForDate(key));
     calendarGrid.appendChild(btn);
   }
 }
 
+function deleteRun(completedAt) {
+  const history = getRunHistory();
+  const entry = history.find(item => item.completedAt === completedAt);
+  if (!entry || !window.confirm("Delete this run? This cannot be undone.")) return;
+  saveRunHistory(history.filter(item => item.completedAt !== completedAt));
+  renderCalendar();
+  showHistoryForDate(dateKey(new Date(completedAt)));
+}
+
 function showHistoryForDate(key) {
   const entries = getHistory()[key] || [];
-  if (!entries.length) {
+  const runs = getRunHistory().filter(entry => dateKey(new Date(entry.completedAt)) === key);
+  if (!entries.length && !runs.length) {
     historyDetail.className = "history-detail muted";
-    historyDetail.textContent = "No completed workout on this date.";
+    historyDetail.textContent = "No completed workout or run on this date.";
     return;
   }
-  historyDetail.className = "history-detail";
-  historyDetail.innerHTML = entries.map((entry, idx) => `
+
+  const workoutHtml = entries.map((entry, idx) => `
     <div>
       <h4>${entry.type} Workout${entries.length > 1 ? ` #${idx + 1}` : ""}</h4>
-      ${entry.cardio ? `<div><strong>Cardio:</strong> ${entry.cardio.name} — ${entry.cardio.detail}</div>` : ""}
       ${entry.core ? `<div><strong>Core:</strong> ${entry.core.name} — ${entry.core.scheme.sets} × ${entry.core.scheme.reps}</div>` : ""}
       <ol>${(entry.exercises || []).map((e, i) => `<li><strong>${e.name}</strong> (${e.label}): ${e.scheme.sets} × ${e.scheme.reps}${e.scheme.rest && e.scheme.rest !== "—" ? `, rest ${e.scheme.rest}` : ""}${i === 0 && e.weightUsed ? ` — <strong>${e.weightUsed} lb</strong>` : ""}</li>`).join("")}</ol>
       <button class="delete-workout-btn" type="button" data-date="${key}" data-index="${idx}">Delete Workout</button>
     </div>`).join("<hr>");
-  historyDetail.querySelectorAll(".delete-workout-btn").forEach(btn => {
+
+  const runHtml = runs.map(entry => `
+    <div>
+      <h4>${entry.session.type} Run</h4>
+      <div><strong>${entry.session.name}</strong> — ${entry.result}</div>
+      <div class="muted">${entry.session.detail}</div>
+      <button class="delete-workout-btn delete-run-btn" type="button" data-run-time="${entry.completedAt}">Delete Run</button>
+    </div>`).join("<hr>");
+
+  historyDetail.className = "history-detail";
+  historyDetail.innerHTML = [workoutHtml, runHtml].filter(Boolean).join("<hr>");
+  historyDetail.querySelectorAll(".delete-workout-btn:not(.delete-run-btn)").forEach(btn => {
     btn.addEventListener("click", () => deleteWorkout(btn.dataset.date, Number(btn.dataset.index)));
+  });
+  historyDetail.querySelectorAll(".delete-run-btn").forEach(btn => {
+    btn.addEventListener("click", () => deleteRun(btn.dataset.runTime));
   });
 }
 
@@ -456,6 +554,10 @@ closeMotivation.addEventListener("click", closeMotivationVideo);
 motivationModal.addEventListener("click", event => { if (event.target === motivationModal) closeMotivationVideo(); });
 document.addEventListener("keydown", event => { if (event.key === "Escape") closeMotivationVideo(); });
 cardioBtn.addEventListener("click", pickCardio);
+logRunBtn.addEventListener("click", logRun);
+runResultInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") logRun();
+});
 coreBtn.addEventListener("click", pickCore);
 typeButtons.forEach(btn => btn.addEventListener("click", () => generateWorkout(btn.dataset.type)));
 regenerateBtn.addEventListener("click", () => { if (selectedType) generateWorkout(selectedType); });
