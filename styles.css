@@ -3,7 +3,7 @@
 }
 
 :root {
-  --bg: #74151c;
+  --bg: #98ff98;
   --panel: #000000;
   --panel-2: #080808;
   --text: #ffffff;
@@ -34,11 +34,12 @@ button, select, input {
 
 .hero {
   padding: 28px 8px 20px;
+  color: #000000;
 }
 
 .eyebrow {
   margin: 0 0 8px;
-  color: var(--accent);
+  color: #000000;
   font-size: .78rem;
   font-weight: 800;
   letter-spacing: .16em;
@@ -51,7 +52,7 @@ h1 {
 }
 
 .sub {
-  color: var(--muted);
+  color: #17352d;
   max-width: 650px;
   margin: 14px 0 0;
 }
